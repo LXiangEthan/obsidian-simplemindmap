@@ -1,0 +1,11 @@
+{
+	"id": "Obsidian-SimpleMindMap",
+	"name": "Obsidian-SimpleMindMap",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Help you to use simplemindmap in Obsidian",
+	"author": "Ethan Refrain",
+	"authorUrl": "https://github.com/LXiangEthan",
+	"fundingUrl": "https://door.ethanliang.top",
+	"isDesktopOnly": false
+}
