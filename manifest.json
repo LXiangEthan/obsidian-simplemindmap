@@ -1,7 +1,7 @@
 {
 	"id": "Obsidian-SimpleMindMap",
 	"name": "Obsidian-SimpleMindMap",
-	"version": "1.0.0",
+	"version": "0.0.2",
 	"minAppVersion": "0.15.0",
 	"description": "Help you to use simplemindmap in Obsidian",
 	"author": "Ethan Refrain",
