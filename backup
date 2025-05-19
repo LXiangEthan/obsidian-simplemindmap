@@ -1,0 +1,151 @@
+import {Plugin, TFile, WorkspaceLeaf} from 'obsidian';
+import { SMMView, VIEW_TYPE_SMM } from "./view"
+// @ts-ignore
+import moment = require("moment");
+
+// @ts-ignore
+import Export from 'simple-mind-map/src/plugins/Export.js'
+import MindMap from "simple-mind-map";
+MindMap.usePlugin(Export)
+
+export default class ExamplePlugin extends Plugin {
+	private mindMap: any;
+	async onload() {
+		this.registerView(VIEW_TYPE_SMM, (leaf: WorkspaceLeaf) => new SMMView(leaf));
+		this.registerExtensions(["smm"], VIEW_TYPE_SMM);
+
+		// 添加命令
+		this.addCommand({
+			id: 'create a smm mindmap',
+			name: 'Create a SimpleMindMap File',
+			callback: async () => {
+				const {vault} = this.app;
+				const date = new Date();
+				const formattedDate = moment(date).format('YYYY-MM-DD');
+				const fileName = `${formattedDate}.smm`;
+				const fileContent = '{\n' +
+					'    "data": {\n' +
+					'        "text": "根节点"\n' +
+					'    },\n' +
+					'    "children": []\n' +
+					'  }';
+
+				try {
+					// 检查文件是否已存在
+					const existingFile = vault.getAbstractFileByPath(fileName);
+					if (existingFile) {
+						console.log('文件已经存在');
+					} else {
+						// 创建新文件
+						await vault.create(fileName, fileContent);
+						console.log('成功创建思维导图');
+					}
+				} catch (error) {
+					console.error('创建SMM文件失败', error);
+				}
+			}
+		})
+		// -------------------------------------------------------------------------------
+
+		this.registerMarkdownPostProcessor(async (element, context) => {
+			const spanElements = element.querySelectorAll('span.internal-embed');
+			// @ts-ignore
+			for (const span of spanElements) {
+				const alt = span.getAttribute('alt');
+				const src = span.getAttribute('src');
+				if (alt && src && alt === src && alt.endsWith('.smm')) {
+					const smmFile = this.app.vault.getAbstractFileByPath(alt) as TFile;
+					if (smmFile) {
+						try {
+							const content = await this.app.vault.read(smmFile);
+							const newElement = document.createElement("div")
+							newElement.classList.add('SMM-DRAW');
+							console.log(newElement)
+							if (span.parentNode) {
+								// 检查父节点是否允许添加子元素
+								if (span.parentNode.nodeName!== 'HTML' && span.parentNode.nodeName!== 'HEAD') {
+									span.parentNode.replaceChildren(newElement, span);
+									span.style.display = 'none'
+									newElement.style.width = '100%'
+									newElement.style.height = '350px'
+									// @ts-ignore
+									new MindMap({ el: newElement, data: JSON.parse(content) });
+									// const svg = mindmap.getSvgData()
+									// // @ts-ignore
+									// newElement.innerHTML = svg.svgHTML;
+								} else {
+									console.error(`Cannot replace element inside ${span.parentNode.nodeName} node`);
+								}
+							} else {
+								console.error(`No parent node found for ${alt}`);
+							}
+						} catch (error) {
+							console.error(`Error reading or processing ${alt}:`, error);
+						}
+					} else {
+						console.error(`SMM file not found: ${alt}`);
+					}
+				}
+			}
+		});
+		//-------------------------------------------------------------------------------------
+
+		this.registerMarkdownPostProcessor(async (element, context) => {
+			// 使用 MutationObserver 监听实时渲染的 DOM 变化
+			console.log("odd")
+			const observer = new MutationObserver((mutationsList) => {
+				mutationsList.forEach((mutation) => {
+					if (mutation.type === 'childList') {
+						const embedElements = element.querySelectorAll('div.internal-embed.file-embed');
+						embedElements.forEach(async (embedElement) => {
+							const src = embedElement.getAttribute('src');
+							const alt = embedElement.getAttribute('alt');
+
+							// 确保 src 和 alt 存在，并且是 .smm 文件
+							if (src && alt && src === alt && src.endsWith('.smm')) {
+								const smmFile = this.app.vault.getAbstractFileByPath(src) as TFile;
+								if (smmFile) {
+									try {
+										// 读取 .smm 文件的内容
+										const content = await this.app.vault.read(smmFile);
+
+										// 创建新的元素来显示 MindMap
+										const newElement = document.createElement('div');
+										newElement.classList.add('SMM-DRAW');
+										newElement.style.width = '100%';
+										newElement.style.height = '350px';
+
+										// 渲染 MindMap
+										// @ts-ignore
+										new MindMap({ el: newElement, data: JSON.parse(content) });
+
+										// 替换原来的 embed 元素
+										embedElement.replaceWith(newElement);
+									} catch (error) {
+										console.error(`Error reading or processing ${src}:`, error);
+									}
+								} else {
+									console.error(`SMM file not found: ${src}`);
+								}
+							}
+						});
+					}
+				});
+			});
+
+			// 启动 MutationObserver 监听 DOM 变化
+			observer.observe(element, { childList: true, subtree: true });
+
+			// 在 Markdown 渲染完成后停止监听
+			// @ts-ignore
+			context.addEventListener('destroy', () => {
+				observer.disconnect();
+			});
+		});
+
+
+	}
+	async onunload() {
+
+	}
+}

@@ -1,0 +1,142 @@
+.text-center {
+	text-align: center;
+}
+
+.mb-8 {
+	margin-bottom: 2rem;
+}
+
+.text-2xl {
+	font-size: 1.5rem;
+	font-weight: bold;
+	color: #1f2937;
+}
+
+@media (min-width: 640px) {
+	.text-2xl {
+		font-size: 1.875rem;
+	}
+}
+
+@media (min-width: 768px) {
+	.text-2xl {
+		font-size: 2.25rem;
+	}
+}
+
+.text-gray-600 {
+	color: #4b5563;
+}
+
+.max-w-2xl {
+	max-width: 42rem;
+	margin: 0 auto;
+}
+
+/* 图标容器样式 */
+.smm-icon-container {
+	display: grid;
+	gap: 2rem;
+}
+
+/* 图标卡片样式 */
+.smm-icon-card {
+	background-color: white;
+	border-radius: 0.75rem;
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	overflow: hidden;
+	transition: all 0.3s ease;
+	padding: 1.5rem;
+}
+
+.smm-icon-card:hover {
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+	transform: translateY(-2px);
+}
+
+/* 图标头部样式 */
+.smm-icon-header {
+	display: flex;
+	align-items: center;
+	margin-bottom: 0.5rem;
+}
+
+.smm-icon-type {
+	font-size: 0.75rem;
+	font-weight: 500;
+	color: #4F46E5;
+	background-color: rgba(79, 70, 229, 0.1);
+	padding: 0.25rem 0.5rem;
+	border-radius: 9999px;
+	margin-right: 0.75rem;
+}
+
+.smm-icon-header h2 {
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: #1f2937;
+	margin: 0;
+}
+
+/* 图标网格样式 */
+.smm-icon-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 1rem;
+	margin-top: 1rem;
+}
+
+@media (min-width: 640px) {
+	.smm-icon-grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+@media (min-width: 768px) {
+	.smm-icon-grid {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+
+@media (min-width: 1024px) {
+	.smm-icon-grid {
+		grid-template-columns: repeat(5, 1fr);
+	}
+}
+
+/* 图标项样式 */
+.smm-icon-item {
+	padding: 1rem;
+	border-radius: 0.5rem;
+	background-color: #f3f4f6;
+	text-align: center;
+	transition: all 0.2s ease;
+	cursor: pointer;
+}
+
+.smm-icon-item:hover {
+	background-color: rgba(79, 70, 229, 0.05);
+	box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* 图标SVG样式 */
+.smm-icon-svg {
+	width: 4rem;
+	height: 4rem;
+	margin: 0 auto 0.5rem;
+	transition: transform 0.3s ease;
+}
+
+.smm-icon-item:hover .smm-icon-svg {
+	transform: scale(1.1);
+}
+
+/* 图标名称样式 */
+.smm-icon-name {
+	font-size: 0.875rem;
+	font-weight: 500;
+	color: #1f2937;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
