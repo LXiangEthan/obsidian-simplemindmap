@@ -1,7 +1,7 @@
 # obsidian-simplemindmap
 
 ## 简介 Introduction
-obsidian-simplemindmap是一款专为Obsidian设计的思维导图插件。用户只需在设置页面填写所需创建文件的目录，便可通过右侧菜单或命令快速创建新的思维导图，帮助用户更直观地组织和管理笔记内容。
+obsidian-simplemindmap是一款专为Obsidian设计的思维导图插件。基于simplemindmap思维导图框架，请进入master分支，用户只需在设置页面填写所需创建文件的目录，便可通过右侧菜单或命令快速创建新的思维导图，帮助用户更直观地组织和管理笔记内容。
 
 obsidian-simplemindmap is a mind map plugin designed specifically for Obsidian. Users only need to fill in the directory where the file needs to be created in the settings page, then quickly create a new mind map via the right menu or command, helping users organize and manage notes more intuitively.
 
