@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,6 +16,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}  # 显式指定token
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -22,7 +28,7 @@ jobs:
         run: npm install
       
       - name: Build plugin
-        run: npm run build  # 或直接使用 tsc 编译 TypeScript
+        run: npm run build
       
       - name: Get current version
         id: version
