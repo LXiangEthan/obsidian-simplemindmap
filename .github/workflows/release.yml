@@ -66,7 +66,7 @@ jobs:
           
       - name: Create and upload zip package
         run: |
-          zip -r your-plugin.zip main.js styles.css manifest.json
+          zip -r ob-smm.zip main.js styles.css manifest.json
           echo "ZIP_FILE=your-plugin.zip" >> $GITHUB_ENV
           
       - name: Upload zip package
