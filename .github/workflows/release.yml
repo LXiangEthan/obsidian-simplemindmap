@@ -3,7 +3,11 @@ name: Release Plugin
 on:
   push:
     branches:
-      - master  # 推送到主分支时触发
+      - master
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   release:
