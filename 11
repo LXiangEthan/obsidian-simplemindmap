@@ -1,0 +1,127 @@
+
+const tagsInputGroup = document.getElementById('tags-input-group');
+const addTagBtn = document.getElementById('add-tag-btn');
+const tagsList = document.getElementById('tags-list');
+const exitBtn = document.getElementById('exit-btn');
+
+// 添加新标签输入框
+addTagBtn.addEventListener('click', () => {
+    const newInputWrapper = document.createElement('div');
+    newInputWrapper.className ='smm-tag-input-wrapper';
+    newInputWrapper.innerHTML = `
+        <input type="text" class="smm-tag-input" placeholder="输入标签...">
+        <div class="smm-tag-delete" title="删除">
+            <svg viewBox="0 0 24 24" width="14" height="14">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+        </div>
+    `;
+
+    // 添加淡入动画
+    newInputWrapper.style.opacity = '0';
+    newInputWrapper.style.transform = 'translateY(10px)';
+    tagsInputGroup.appendChild(newInputWrapper);
+
+    // 触发重排后应用动画
+    setTimeout(() => {
+        newInputWrapper.style.opacity = '1';
+        newInputWrapper.style.transform = 'translateY(0)';
+    }, 10);
+
+    // 添加删除事件
+    const deleteBtn = newInputWrapper.querySelector('.smm-tag-delete');
+    deleteBtn.addEventListener('click', () => {
+        removeInputWrapper(newInputWrapper);
+    });
+
+    // 自动聚焦新输入框
+    const newInput = newInputWrapper.querySelector('.smm-tag-input');
+    newInput.focus();
+});
+
+// 删除输入框
+function removeInputWrapper(wrapper) {
+    // 添加淡出动画
+    wrapper.style.opacity = '0';
+    wrapper.style.transform = 'translateY(10px)';
+    wrapper.style.transition = 'opacity 0.3s, transform 0.3s';
+
+    // 动画结束后移除元素
+    setTimeout(() => {
+        tagsInputGroup.removeChild(wrapper);
+    }, 300);
+}
+
+// 为现有的删除按钮添加事件
+document.querySelectorAll('.smm-tag-delete').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const wrapper = btn.closest('.smm-tag-input-wrapper');
+        removeInputWrapper(wrapper);
+    });
+});
+
+// 处理标签列表中的删除
+document.querySelectorAll('.smm-tag-remove').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const tagItem = btn.closest('.smm-tag-item');
+        // 添加删除动画
+        tagItem.style.opacity = '0';
+        tagItem.style.transform ='scale(0.9)';
+        tagItem.style.transition = 'opacity 0.2s, transform 0.2s';
+
+        setTimeout(() => {
+            tagsList.removeChild(tagItem);
+        }, 200);
+    });
+});
+
+// 实时预览标签（示例功能）
+document.querySelectorAll('.smm-tag-input').forEach(input => {
+    input.addEventListener('input', function () {
+        if (this.value.trim() && event.key === 'Enter') {
+            addTag(this.value.trim());
+            this.value = '';
+        }
+    });
+});
+
+// 添加标签到列表（示例功能）
+function addTag(tagName) {
+    const tagItem = document.createElement('div');
+    tagItem.className ='smm-tag-item';
+    tagItem.innerHTML = `
+        ${tagName}
+        <span class="smm-tag-remove">×</span>
+    `;
+
+    // 添加淡入动画
+    tagItem.style.opacity = '0';
+    tagItem.style.transform ='scale(0.9)';
+    tagsList.appendChild(tagItem);
+
+    // 触发重排后应用动画
+    setTimeout(() => {
+        tagItem.style.opacity = '1';
+        tagItem.style.transform ='scale(1)';
+        tagItem.style.transition = 'opacity 0.2s, transform 0.2s';
+    }, 10);
+
+    // 添加删除事件
+    const removeBtn = tagItem.querySelector('.smm-tag-remove');
+    removeBtn.addEventListener('click', () => {
+        // 添加删除动画
+        tagItem.style.opacity = '0';
+        tagItem.style.transform ='scale(0.9)';
+        tagItem.style.transition = 'opacity 0.2s, transform 0.2s';
+
+        setTimeout(() => {
+            tagsList.removeChild(tagItem);
+        }, 200);
+    });
+}
+
+// 退出按钮点击事件
+exitBtn.addEventListener('click', () => {
+    const tagsContainer = document.querySelector('.smm-tags-container');
+    tagsContainer.style.display = 'none';
+});

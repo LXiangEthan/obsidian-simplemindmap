@@ -1,0 +1,654 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	font-family: 'Inter', sans-serif;
+}
+
+body {
+	background-color: #f9fafb;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+/* 颜色变量 */
+:root {
+	--primary: #165DFF;
+	--secondary: #7B61FF;
+	--accent: #00C2B8;
+	--dark: #1D2129;
+	--light: #F2F3F5;
+	--gray-50: #F5F5F5;
+	--gray-100: #f3f4f6;
+	--gray-200: #e5e7eb;
+	--gray-300: #d1d5db;
+	--gray-400: #9ca3af;
+	--gray-500: #6b7280;
+	--gray-600: #4b5563;
+	--gray-700: #374151;
+	--gray-800: #1f2937;
+	--gray-900: #111827;
+	--green-100: #dcfce7;
+	--green-500: #22c55e;
+	--green-800: #166534;
+	--blue-100: #dbeafe;
+	--blue-500: #3b82f6;
+	--blue-800: #1e40af;
+	--purple-100: #ede9fe;
+	--purple-500: #8b5cf6;
+	--purple-800: #5b21b6;
+	--amber-100: #fffbeb;
+	--amber-500: #f59e0b;
+	--amber-800: #92400e;
+	--red-100: #fee2e2;
+	--red-500: #ef4444;
+	--red-800: #991b1b;
+}
+
+/* 顶部导航栏 */
+header {
+	background-color: white;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+	z-index: 10;
+}
+
+.header-container {
+	max-width: 1440px;
+	margin: 0 auto;
+	padding: 0.75rem 1rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.header-left {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.menu-toggle {
+	color: var(--gray-600);
+	cursor: pointer;
+	transition: transform 0.3s ease;
+}
+
+.menu-toggle:hover {
+	transform: rotate(90deg);
+}
+
+.header-title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: var(--dark);
+}
+
+.header-right {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.header-icon {
+	color: var(--gray-600);
+	cursor: pointer;
+	transition: color 0.2s ease;
+}
+
+.header-icon:hover {
+	color: var(--primary);
+}
+
+.user-avatar {
+	width: 2rem;
+	height: 2rem;
+	border-radius: 50%;
+	background-color: var(--primary);
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 500;
+}
+
+/* 主内容区 */
+.main-content {
+	display: flex;
+	flex: 1;
+	overflow: hidden;
+}
+
+/* 侧边栏 */
+.sidebar {
+	width: 16rem;
+	background-color: white;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+	height: calc(100vh - 3.5rem);
+	transition: all 0.3s ease;
+	z-index: 20;
+	position: relative;
+}
+
+.sidebar.collapsed {
+	width: 5rem;
+}
+
+.sidebar-search {
+	padding: 1rem;
+	border-bottom: 1px solid var(--gray-200);
+	transition: all 0.3s ease;
+}
+
+.sidebar.collapsed .sidebar-search {
+	padding: 0;
+	height: 0;
+	overflow: hidden;
+	border-bottom: none;
+}
+
+.search-container {
+	position: relative;
+}
+
+.search-input {
+	width: 100%;
+	padding: 0.5rem 0.5rem 0.5rem 2.5rem;
+	border-radius: 0.5rem;
+	background-color: var(--light);
+	border: none;
+	outline: none;
+	transition: all 0.2s ease;
+}
+
+.search-input:focus {
+	box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.2);
+}
+
+.search-icon {
+	position: absolute;
+	left: 1rem;
+	top: 0.6rem;
+	color: var(--gray-400);
+}
+
+.sidebar-nav {
+	padding: 0.5rem;
+}
+
+.nav-section {
+	margin-bottom: 1rem;
+}
+
+.section-heading {
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	color: var(--gray-500);
+	font-weight: 600;
+	padding: 0 0.75rem;
+	margin-bottom: 0.5rem;
+	transition: all 0.3s ease;
+}
+
+.sidebar.collapsed .section-heading {
+	opacity: 0;
+	height: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.nav-items {
+	list-style: none;
+}
+
+.nav-item {
+	margin-bottom: 0.25rem;
+}
+
+.nav-link {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.625rem 0.75rem;
+	border-radius: 0.5rem;
+	color: var(--gray-700);
+	text-decoration: none;
+	transition: all 0.2s ease;
+	position: relative;
+}
+
+.nav-link:hover {
+	background-color: rgba(22, 93, 255, 0.05);
+}
+
+.nav-link.active {
+	background-color: rgba(22, 93, 255, 0.1);
+	color: var(--primary);
+	border-left: 4px solid var(--primary);
+	padding-left: calc(0.75rem - 4px);
+}
+
+.nav-icon {
+	width: 1.25rem;
+	text-align: center;
+}
+
+.nav-text {
+	transition: all 0.3s ease;
+}
+
+.sidebar.collapsed .nav-text {
+	opacity: 0;
+	visibility: hidden;
+	position: absolute;
+}
+
+.badge {
+	margin-left: auto;
+	background-color: rgba(22, 93, 255, 0.1);
+	color: var(--primary);
+	font-size: 0.75rem;
+	padding: 0.125rem 0.5rem;
+	border-radius: 9999px;
+	transition: all 0.3s ease;
+}
+
+.sidebar.collapsed .badge {
+	opacity: 0;
+	visibility: hidden;
+	position: absolute;
+}
+
+.sidebar-footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	padding: 1rem;
+	border-top: 1px solid var(--gray-200);
+}
+
+.new-tab-btn {
+	width: 100%;
+	background-color: var(--primary);
+	color: white;
+	padding: 0.5rem;
+	border-radius: 0.5rem;
+	border: none;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	transition: all 0.2s ease;
+}
+
+.new-tab-btn:hover {
+	background-color: rgba(22, 93, 255, 0.9);
+}
+
+.sidebar.collapsed .new-tab-btn-text {
+	opacity: 0;
+	visibility: hidden;
+	position: absolute;
+}
+
+/* 主内容区 */
+.content-area {
+	flex: 1;
+	overflow-y: auto;
+	padding: 1.5rem;
+}
+
+.content-container {
+	max-width: 1440px;
+	margin: 0 auto;
+}
+
+.page-header {
+	margin-bottom: 1.5rem;
+}
+
+.page-title {
+	font-size: clamp(1.5rem, 3vw, 2.5rem);
+	font-weight: 700;
+	color: var(--dark);
+}
+
+.page-subtitle {
+	color: var(--gray-500);
+	margin-top: 0.25rem;
+}
+
+/* 统计卡片 */
+.stats-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1.5rem;
+	margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+	.stats-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (min-width: 1024px) {
+	.stats-grid {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+
+.stat-card {
+	background-color: white;
+	border-radius: 0.75rem;
+	padding: 1.5rem;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+	transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+	box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+}
+
+.card-header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+}
+
+.card-icon {
+	width: 3rem;
+	height: 3rem;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.25rem;
+}
+
+.icon-blue {
+	background-color: var(--blue-100);
+	color: var(--primary);
+}
+
+.icon-purple {
+	background-color: var(--purple-100);
+	color: var(--secondary);
+}
+
+.icon-green {
+	background-color: var(--green-100);
+	color: var(--green-500);
+}
+
+.icon-amber {
+	background-color: var(--amber-100);
+	color: var(--amber-500);
+}
+
+.stat-title {
+	font-size: 0.875rem;
+	color: var(--gray-500);
+}
+
+.stat-value {
+	font-size: 2rem;
+	font-weight: 700;
+	margin-top: 0.25rem;
+}
+
+.stat-change {
+	display: flex;
+	align-items: center;
+	font-size: 0.875rem;
+	margin-top: 0.5rem;
+}
+
+.stat-change.up {
+	color: var(--green-500);
+}
+
+.stat-change.down {
+	color: var(--red-500);
+}
+
+.change-percentage {
+	display: flex;
+	align-items: center;
+}
+
+.change-icon {
+	margin-right: 0.25rem;
+}
+
+.change-comparison {
+	color: var(--gray-500);
+	margin-left: 0.25rem;
+}
+
+/* 图表区域 */
+.charts-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1.5rem;
+	margin-bottom: 2rem;
+}
+
+@media (min-width: 1024px) {
+	.charts-grid {
+		grid-template-columns: 2fr 1fr;
+	}
+}
+
+.chart-card {
+	background-color: white;
+	border-radius: 0.75rem;
+	padding: 1.5rem;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.chart-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 1.5rem;
+}
+
+.chart-title {
+	font-size: 1.125rem;
+	font-weight: 600;
+}
+
+.chart-period {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.period-btn {
+	font-size: 0.75rem;
+	padding: 0.25rem 0.75rem;
+	border-radius: 9999px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.period-btn.active {
+	background-color: rgba(22, 93, 255, 0.1);
+	color: var(--primary);
+}
+
+.period-btn:not(.active) {
+	color: var(--gray-500);
+}
+
+.period-btn:not(.active):hover {
+	background-color: var(--gray-100);
+}
+
+.chart-container {
+	height: 16rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--gray-400);
+}
+
+/* 最近活动表格 */
+.activity-card {
+	background-color: white;
+	border-radius: 0.75rem;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.activity-header {
+	padding: 1.5rem;
+	border-bottom: 1px solid var(--gray-200);
+}
+
+.activity-title {
+	font-size: 1.125rem;
+	font-weight: 600;
+}
+
+.activity-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.table-header {
+	background-color: var(--gray-50);
+}
+
+.table-header th {
+	text-align: left;
+	padding: 0.75rem 1.5rem;
+	font-size: 0.75rem;
+	font-weight: 500;
+	color: var(--gray-500);
+	text-transform: uppercase;
+}
+
+.table-body tr {
+	border-bottom: 1px solid var(--gray-200);
+	transition: all 0.2s ease;
+}
+
+.table-body tr:hover {
+	background-color: var(--gray-50);
+}
+
+.table-body td {
+	padding: 1rem 1.5rem;
+	font-size: 0.875rem;
+}
+
+.activity-type {
+	display: flex;
+	align-items: center;
+}
+
+.type-icon {
+	width: 2rem;
+	height: 2rem;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-right: 0.75rem;
+}
+
+.type-title {
+	font-weight: 500;
+	color: var(--gray-900);
+}
+
+.type-details {
+	color: var(--gray-500);
+}
+
+.user-info {
+	display: flex;
+	align-items: center;
+}
+
+.user-avatar {
+	width: 2rem;
+	height: 2rem;
+	border-radius: 50%;
+	margin-right: 0.75rem;
+}
+
+.user-name {
+	font-weight: 500;
+	color: var(--gray-900);
+}
+
+.user-role {
+	color: var(--gray-500);
+}
+
+.activity-time {
+	color: var(--gray-500);
+}
+
+.status-badge {
+	font-size: 0.75rem;
+	padding: 0.125rem 0.5rem;
+	border-radius: 9999px;
+	font-weight: 500;
+}
+
+.status-completed {
+	background-color: var(--green-100);
+	color: var(--green-800);
+}
+
+.status-in-progress {
+	background-color: var(--blue-100);
+	color: var(--blue-800);
+}
+
+.status-warning {
+	background-color: var(--red-100);
+	color: var(--red-800);
+}
+
+.activity-footer {
+	padding: 1.5rem;
+	border-top: 1px solid var(--gray-200);
+}
+
+.view-all-btn {
+	color: var(--primary);
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.view-all-btn:hover {
+	color: rgba(22, 93, 255, 0.8);
+}
+
+/* 动画效果 */
+.sidebar-transition {
+	transition: all 0.3s ease;
+}
+
+.fade-in {
+	animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+.scale-in {
+	animation: scaleIn 0.3s ease forwards;
+}
+
+@keyframes scaleIn {
+	from { transform: scale(0.95); opacity: 0; }
+	to { transform: scale(1); opacity: 1; }
+}

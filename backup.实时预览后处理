@@ -1,0 +1,179 @@
+		// -----------------------------------------------------
+		//-------------------------------------------------------------------------------------
+		// 实时预览模式下嵌入处理
+// 		this.registerEvent(this.app.workspace.on('active-leaf-change', async (leaf) => {
+// 			if (leaf instanceof WorkspaceLeaf && leaf.view instanceof MarkdownView) {
+// 				const view = leaf.view;
+// 				const container = view.containerEl;
+// 				const smmEmbeds = container.querySelectorAll('.internal-embed.file-embed.mod-generic[src$=".smm"]');
+// 				// @ts-ignore
+// 				for (const embed of smmEmbeds) {
+// 					if (embed.getAttribute("smm-loading") == "done") {
+// 						continue
+// 					}
+// 					const src = embed.getAttribute('src');
+// 					if (src && src.endsWith('.smm')) {
+// 						let newPath = ""
+// 						const length = src.split("/").length;
+// 						newPath = this.settings.myInputFolderPath+"/"+src.split('/')[length-1]
+// 						const smmFile = this.app.vault.getAbstractFileByPath(newPath) as TFile;
+// 						if (smmFile) {
+// 							try {
+// 								const content = await this.app.vault.read(smmFile);
+// 								const contentDiv = document.createElement('div');
+// 								contentDiv.classList.add('LIVE-SMM-DRAW');
+// 								// contentDiv.style.width = '100%'
+// 								embed.insertBefore(contentDiv, embed.children[0])
+// 								embed.setAttribute('smm-loading', "done");
+// 								const blob = this.dataURItoBlob(JSON.parse(content).svgData);
+//
+// 								// 生成 Blob URL
+// 								const blobUrl = URL.createObjectURL(blob);
+// 								const cu_link = `
+// 							<button class="action_has has_saved" file="${smmFile.path}" aria-label="save" type="button" ">
+//
+//
+//   <svg
+//     aria-hidden="true"
+//     xmlns="http://www.w3.org/2000/svg"
+//     width="20"
+//     height="20"
+//     stroke-linejoin="round"
+//     stroke-linecap="round"
+//     stroke-width="2"
+//     viewBox="0 0 24 24"
+//     stroke="currentColor"
+//     fill="none"
+//   >
+//     <path
+//       d="m19,21H5c-1.1,0-2-.9-2-2V5c0-1.1.9-2,2-2h11l5,5v11c0,1.1-.9,2-2,2Z"
+//       stroke-linejoin="round"
+//       stroke-linecap="round"
+//       data-path="box"
+//     ></path>
+//     <path
+//       d="M7 3L7 8L15 8"
+//       stroke-linejoin="round"
+//       stroke-linecap="round"
+//       data-path="line-top"
+//     ></path>
+//     <path
+//       d="M17 20L17 13L7 13L7 20"
+//       stroke-linejoin="round"
+//       stroke-linecap="round"
+//       data-path="line-bottom"
+//     ></path>
+//   </svg>
+// </button>
+// 							`
+// 								// @ts-ignore
+// 								contentDiv.innerHTML = `<img src="${blobUrl}" class="embed-link-smm"></img>`+cu_link
+// 								contentDiv.addEventListener('click', function(event) {
+// 									event.stopPropagation();
+// 								}, false);
+// 							} catch {
+// 								console.error(`Error reading or processing ${src}`);
+// 							}
+// 						}
+// 					}
+// 				}
+// 			}
+// 			// @ts-ignore
+// 			for (const e of document.querySelectorAll(".action_has")) {
+// 				e.onclick = async ()=>{
+// 					const filePath = e.getAttribute("file")
+// 					await this.app.workspace.openLinkText(filePath, '', false);
+// 				}
+// 			}
+// 		}));
+// 		this.registerEvent(this.app.workspace.on('editor-change', async (editor) => {
+// 			const file = this.app.workspace.getActiveFile()
+// 			if (file instanceof TFile && file.extension === 'md') {
+// 				// @ts-ignore
+// 				const leaf = this.getLeafForFile(file);
+// 				if (leaf) {
+// 					const view = leaf.view;
+// 					const container = view.containerEl;
+// 					const smmEmbeds = container.querySelectorAll('.internal-embed.file-embed.mod-generic[src$=".smm"]');
+// 					// @ts-ignore
+// 					for (const embed of smmEmbeds) {
+// 						if (embed.getAttribute("smm-loading") == "done") {
+// 							continue
+// 						}
+// 						const src = embed.getAttribute('src');
+// 						if (src && src.endsWith('.smm')) {
+// 							let newPath = ""
+// 							const length = src.split("/").length;
+// 							newPath = this.settings.myInputFolderPath+"/"+src.split('/')[length-1]
+// 							const smmFile = this.app.vault.getAbstractFileByPath(newPath) as TFile;
+// 							if (smmFile) {
+// 								try {
+// 									const content = await this.app.vault.read(smmFile);
+// 									const contentDiv = document.createElement('div');
+// 									contentDiv.classList.add('LIVE-SMM-DRAW');
+// 									contentDiv.style.width = '100%'
+// 									embed.insertBefore(contentDiv, embed.children[0])
+// 									embed.setAttribute('smm-loading', "done");
+// 									const blob = this.dataURItoBlob(JSON.parse(content).svgData);
+//
+// 									// 生成 Blob URL
+// 									const blobUrl = URL.createObjectURL(blob);
+// 									const cu_link = `
+// 							<button class="action_has has_saved" file="${smmFile.path}" aria-label="save" type="button" ">
+//
+//
+//   <svg
+//     aria-hidden="true"
+//     xmlns="http://www.w3.org/2000/svg"
+//     width="20"
+//     height="20"
+//     stroke-linejoin="round"
+//     stroke-linecap="round"
+//     stroke-width="2"
+//     viewBox="0 0 24 24"
+//     stroke="currentColor"
+//     fill="none"
+//   >
+//     <path
+//       d="m19,21H5c-1.1,0-2-.9-2-2V5c0-1.1.9-2,2-2h11l5,5v11c0,1.1-.9,2-2,2Z"
+//       stroke-linejoin="round"
+//       stroke-linecap="round"
+//       data-path="box"
+//     ></path>
+//     <path
+//       d="M7 3L7 8L15 8"
+//       stroke-linejoin="round"
+//       stroke-linecap="round"
+//       data-path="line-top"
+//     ></path>
+//     <path
+//       d="M17 20L17 13L7 13L7 20"
+//       stroke-linejoin="round"
+//       stroke-linecap="round"
+//       data-path="line-bottom"
+//     ></path>
+//   </svg>
+// </button>
+// 							`
+// 									// @ts-ignore
+// 									contentDiv.innerHTML = `<img src="${blobUrl}" class="embed-link-smm"></img>`+cu_link
+// 									contentDiv.addEventListener('click', function(event) {
+// 										event.stopPropagation();
+// 									}, false);
+// 								} catch {
+// 									console.error(`Error reading or processing ${src}`);
+// 								}
+// 							}
+// 						}
+// 					}
+// 				}
+// 			}
+// 			// @ts-ignore
+// 			for (const e of document.querySelectorAll(".action_has")) {
+// 				e.onclick = async ()=>{
+// 					const filePath = e.getAttribute("file")
+// 					await this.app.workspace.openLinkText(filePath, '', false);
+// 				}
+// 			}
+// 		}));
+		// -----------------------------------------------------
