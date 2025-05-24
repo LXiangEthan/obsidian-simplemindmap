@@ -1904,7 +1904,7 @@ If your plugin does not need CSS, delete this file.
 .smm-list {
 	position: absolute;
 	top:50px;
-	right: 15%;
+	right: 0;
 	background-color: white;
 	border-radius: 8px;
 	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
