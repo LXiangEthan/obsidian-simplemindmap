@@ -50,15 +50,19 @@ If your plugin does not need CSS, delete this file.
 /*	backdrop-filter: blur(5px);*/
 /*	overflow: hidden;*/
 /*}*/
-.embed-link-smm{
-	width: 100% !important;
-	height: 100% !important;
-}
+/*.embed-link-smm{*/
+/*	width: 100% !important;*/
+/*	height: 100% !important;*/
+/*}*/
 .internal-embed .file-embed-title {
-	display: none;
+	display: none !important;
 }
 .internal-embed{
 	padding: 0 !important;
+	background-color: transparent;
+}
+.internal-embed:hover{
+	background-color: transparent !important;
 }
 /*.internal-embed img{*/
 /*	width: 100%;*/
