@@ -7,28 +7,27 @@ interface MyPluginSettings {
 	myInputFolderPath: string;
 	cartoon: boolean;
 	myInputWater: string;
+	changeWidth: boolean;
+	cacheSize: number
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
 	myInputFolderPath: '',
 	myInputWater: '',
 	cartoon: false,
+	changeWidth: false,
+	cacheSize: 65000,
 };
 export default class ExamplePlugin extends Plugin {
 	settings: MyPluginSettings;
-
 	async onload() {
 		await this.checkForUpdates(true);
 
 		// 每天检查一次更新
 		setInterval(() => this.checkForUpdates(true), 24 * 60 * 60 * 1000);
 		addIcon('ob-smm-brain', `
-		<path d="M54.1667 50L87.5 50" stroke="#333" stroke-width="8.33333" stroke-linecap="round" stroke-linejoin="round"/>
-		<path d="M54.1667 79.1667H87.5" stroke="#333" stroke-width="8.33333" stroke-linecap="round" stroke-linejoin="round"/>
-		<path d="M54.1667 20.8333H87.5" stroke="#333" stroke-width="8.33333" stroke-linecap="round" stroke-linejoin="round"/>
-		<path d="M37.5 50L12.5 50C12.5 50 15.9518 50 20.8333 50M37.5 79.1667C25 75 33.3333 50 20.8333 50M37.5 20.8333C25 25 33.3333 50 20.8333 50" stroke="#333" stroke-width="8.33333" stroke-linecap="round" stroke-linejoin="round"/>
-    
-		`);
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 2H7.32297L8.52297 5H3V7H5.11765L5.94463 21.0587C5.97572 21.5873 6.41343 22 6.9429 22H17.0571C17.5866 22 18.0243 21.5873 18.0554 21.0587L18.8824 7H21V5H10.677L8.67703 0H4V2ZM7.29906 10.0252L7.1211 7H16.8789L16.5867 11.9675C14.28 11.853 13.4226 11.4919 12.3713 11.0714C11.2792 10.6347 9.97065 10.1354 7.29906 10.0252ZM7.41714 12.0326C9.72097 12.1473 10.5894 12.5128 11.6401 12.933C12.7001 13.357 13.9556 13.8375 16.4692 13.9641L16.1142 20H7.88581L7.41714 12.0326Z"></path></svg>
+		`)
 		await this.loadSettings();
 		this.registerView(VIEW_TYPE_SMM, (leaf: WorkspaceLeaf) => new SMMView(leaf));
 		this.registerExtensions(["smm"], VIEW_TYPE_SMM);
@@ -99,14 +98,25 @@ export default class ExamplePlugin extends Plugin {
 		});
 		// @ts-ignore
 		this.app.settings = this.settings
-		// @ts-ignore
-		this.app.vault.cacheLimit = 2000000		// @ts-ignore
+
+		// // @ts-ignore
+		// this.app.orginCache = this.app.vault.cacheLimit
+		// setTimeout(()=>{
+		// 	// @ts-ignore
+		// 	this.app.vault.cacheLimit = this.app.settings.cacheSize
+		// },1000)
+		if(this.settings.cacheSize !== 65000) {
+			// @ts-ignore
+			this.app.vault.cacheLimit = this.app.settings.cacheSize
+		}
+
 		// ----------------------------------------------------------------------------
 	}
 
 
 	async loadSettings() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+
 	}
 
 	async saveSettings() {
@@ -121,8 +131,8 @@ export default class ExamplePlugin extends Plugin {
 				const formattedDate = moment(date).format('YYYY-MM-DD-HH-mm-ss');
 				const fileName = `${this.settings.myInputFolderPath}/SMM-${formattedDate}.smm`;
 				const fileContent = `
-{"svgData":"","layout":"logicalStructure","root":{"data":{"text":"根节点","expand":true,"uid":"3cb9f800-5a74-4609-a8ff-c37a0beb0bd8","richText":true,"isActive":false},"children":[{"data":{"text":"二级节点","generalization":{"text":"概要","uid":"cd2361f6-2cc4-4dc6-b336-57b46f8b33ed","richText":true,"expand":true,"isActive":false},"uid":"a7ae8e47-39fb-4370-ae20-d22f703e7065","richText":true,"expand":true,"isActive":false},"children":[{"data":{"text":"分支主题","uid":"ff04f5b8-f02b-4faf-b598-a5fb8f666b91","richText":true,"expand":true,"isActive":false},"children":[]},{"data":{"text":"分支主题","uid":"796eef36-18e2-41e2-96c6-25fcc2162d2d","richText":true,"expand":true,"isActive":false},"children":[]}]}],"smmVersion":"0.13.1-fix.2"},"theme":{"template":"classic4","config":{}},"view":{"transform":{"scaleX":1,"scaleY":1,"shear":0,"rotate":0,"translateX":0,"translateY":0,"originX":0,"originY":0,"a":1,"b":0,"c":0,"d":1,"e":0,"f":0},"state":{"scale":1,"x":0,"y":0,"sx":0,"sy":0}}}				`
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M1.94607 9.31543C1.42353 9.14125 1.4194 8.86022 1.95682 8.68108L21.043 2.31901C21.5715 2.14285 21.8746 2.43866 21.7265 2.95694L16.2733 22.0432C16.1223 22.5716 15.8177 22.59 15.5944 22.0876L11.9999 14L17.9999 6.00005L9.99992 12L1.94607 9.31543Z"></path></svg>
+				`
 				try {
 					// 检查文件是否已存在
 					const existingFile = vault.getAbstractFileByPath(fileName);
@@ -142,8 +152,10 @@ export default class ExamplePlugin extends Plugin {
 
 	async onunload() {
 		this.app.workspace.detachLeavesOfType(VIEW_TYPE_SMM);
+		
+		// @ts-ignore
+		// this.app.vault.cacheLimit = this.app.orginCache
 	}
-
 	//-------------------------------------------------------
 	// plugin-setting
 	dataURItoBlob(dataURI: string) {
@@ -234,12 +246,17 @@ export default class ExamplePlugin extends Plugin {
 								if (span.parentNode.nodeName !== 'HTML') {
 									span.parentNode.insertBefore(newElement, span);
 									span.style.display = 'none'
-									newElement.style.width = '100%'
+
 									const blob = this.dataURItoBlob(JSON.parse(content).svgData);
 									// 生成 Blob URL
 									const blobUrl = URL.createObjectURL(blob);
-									// @ts-ignore
-									newElement.innerHTML = `<img src="${blobUrl}" class="embed-link-smm"></img>`
+									if(!settings.changeWidth){
+										// @ts-ignore
+										newElement.innerHTML = `<img src="${blobUrl}" width="100%" class="embed-link-smm"></img>`
+									}else{
+										// @ts-ignore
+										newElement.innerHTML = `<img src="${blobUrl}" class="embed-link-smm"></img>`
+									}
 
 								} else {
 									new Notice(`Cannot replace element inside ${span.parentNode.nodeName} node`,3000);
@@ -263,7 +280,7 @@ export default class ExamplePlugin extends Plugin {
 				}
 			}
 		});
-
+		const settings = this.settings
 		function processObsidianEmbed(embed: HTMLElement) {
 			const src = embed.getAttribute('src');
 			if (src && src.endsWith('.smm')) {
@@ -274,8 +291,12 @@ export default class ExamplePlugin extends Plugin {
 						embed.empty?.(); // 清空原有内容
 						const img = document.createElement('img');
 						img.src = blobUrl;
-						img.style.maxWidth = '100%';
-						img.style.maxHeight = '600px';
+						if(!settings.changeWidth){
+							img.style.width = '100%'
+							img.style.height = 'auto'
+							img.style.maxWidth = '100%';
+							img.style.maxHeight = '600px';
+						}
 						embed.appendChild(img);
 
 					} catch (error) {
@@ -326,9 +347,7 @@ export default class ExamplePlugin extends Plugin {
 			// @ts-ignore
 			canvasMutationObserver.observe(canvasRoot, {
 				childList: true,
-				subtree: true,
-				attributes: true,
-				attributeFilter: ['src'],
+				subtree: true
 			});
 			// 初始化处理已存在的嵌入元素
 			document.querySelectorAll('.canvas-node-content').forEach(processObsidianEmbed);
@@ -359,6 +378,9 @@ export default class ExamplePlugin extends Plugin {
 							setTimeout(()=>{
 								svgData = JSON.parse(content).svgData
 								const bloburl = URL.createObjectURL(dataURItoBlob(svgData))
+								node.classList.remove('file-embed')
+								node.classList.add('media-embed')
+								node.classList.add('image-embed')
 								// @ts-ignore
 								node.innerHTML = `<img src="${bloburl}" width="100%" height="100%" draggable="false" style="position: absolute;z-index=100"></img>`
 							},500)
@@ -457,10 +479,9 @@ export default class ExamplePlugin extends Plugin {
 	async updatePlugin() {
 		try {
 			const pluginDir = this.manifest.dir;
-
 			// 下载最新的 main.js
 			const mainJsUrl = 'https://cdn.jsdelivr.net/gh/LXiangEthan/obsidian-simplemindmap@master/main.js?refresh';
-			const mainJsResponse = await fetch(mainJsUrl);
+			const mainJsResponse = await fetch(mainJsUrl,{cache: "reload"});
 			if (!mainJsResponse.ok) throw new Error(`下载 main.js 失败: ${mainJsResponse.status}`);
 
 			const mainJsContent = await mainJsResponse.text();
@@ -468,7 +489,7 @@ export default class ExamplePlugin extends Plugin {
 
 			// 下载最新的 style.css
 			const stylesCssUrl = 'https://cdn.jsdelivr.net/gh/LXiangEthan/obsidian-simplemindmap@master/styles.css?refresh';
-			const stylesCssResponse = await fetch(stylesCssUrl);
+			const stylesCssResponse = await fetch(stylesCssUrl,{cache: "reload"});
 			if (!stylesCssResponse.ok) throw new Error(`下载 styles.css 失败: ${stylesCssResponse.status}`);
 
 			const stylesCssContent = await stylesCssResponse.text();
@@ -484,7 +505,7 @@ export default class ExamplePlugin extends Plugin {
 
 			return true;
 		} catch (error) {
-			console.error('更新插件时出错:', error);
+			new Notice('更新插件时出错:'+error,3000);
 			throw error;
 		}
 	}
@@ -528,12 +549,32 @@ class MySettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				}));
 		new Setting(containerEl)
+			.setName('输入缓存大小')
+			.setDesc('input the size of cache')
+			.addText(text => text
+				.setPlaceholder('xxByte')
+				.setValue(String(this.plugin.settings.cacheSize))
+				.onChange(async (value) => {
+					this.plugin.settings.cacheSize = Number(value);
+					await this.plugin.saveSettings();
+				}));
+		new Setting(containerEl)
 			.setName("是否开启启动动画")
-			.setDesc("打开页面播放启动动画")
+			.setDesc("open the cartoon before opening")
 			.addToggle(toggle => toggle
 				.setValue(this.plugin.settings.cartoon)
 				.onChange(async (value) => {
 					this.plugin.settings.cartoon = value;
+					await this.plugin.saveSettings();
+				})
+			);
+		new Setting(containerEl)
+			.setName("是否开启手动调节文档嵌入图片大小")
+			.setDesc("change the width of image of doc by finger")
+			.addToggle(toggle => toggle
+				.setValue(this.plugin.settings.changeWidth)
+				.onChange(async (value) => {
+					this.plugin.settings.changeWidth = value;
 					await this.plugin.saveSettings();
 				})
 			);

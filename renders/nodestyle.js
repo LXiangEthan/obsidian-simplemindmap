@@ -27,6 +27,10 @@ export const smm_nodestyle = `
               <option>serif</option>
           </select>
         </div>
+  
+      </div>
+      
+      <div class="smm-nodestyle-subsection">
         <div class="smm-nodestyle-field">
           <label class="smm-nodestyle-label">字号</label>
           <select class="smm-nodestyle-select" id="smm-node-word-zh">
@@ -47,9 +51,9 @@ export const smm_nodestyle = `
         <button class="smm-nodestyle-button smm-nodestyle-bold">B</button>
         <button class="smm-nodestyle-button smm-nodestyle-italic">I</button>
         <button class="smm-nodestyle-button smm-nodestyle-underline">U</button>
+        <button class="smm-nodestyle-button" id="smm-clear-s">S</button>
       </div>
-      </div>
-
+		</div>
     </div>
 
     <!-- 边框设置 -->

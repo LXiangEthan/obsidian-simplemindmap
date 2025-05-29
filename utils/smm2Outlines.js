@@ -119,6 +119,7 @@ export const smm2outlines = (mindMap,data,contentEl,document)=>{
 				if (e.key === 'Enter') {
 					saveEdit(node, input.value);
 					editingNodeId = null;
+					render()
 				} else if (e.key === 'Escape') {
 					editingNodeId = null;
 					render()

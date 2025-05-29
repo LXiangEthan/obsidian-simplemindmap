@@ -98,14 +98,7 @@ export const smm_structure = `
                     <div class="smm-structure-desc">像鱼骨头一样排列</div>
                 </div>
             </div>
-            <div class="smm-structure-card" structure-cal="fishbone">
-                <div class="smm-structure-image" style="background-image: url('${url+"fishbone.jpg"}')"></div>
-                <div class="smm-structure-info">
-                    <div class="smm-structure-title">鱼骨图</div>
-                    <div class="smm-structure-desc">像鱼骨头一样排列</div>
-                </div>
-            </div>
-            <div class="smm-structure-card" structure-cal="rightFishbone">
+            <!-- <div class="smm-structure-card" structure-cal="rightFishbone">
                 <div class="smm-structure-image" style="background-image: url('${url+"rightFishbone.jpg"}')"></div>
                 <div class="smm-structure-info">
                     <div class="smm-structure-title">鱼骨图</div>
@@ -118,6 +111,6 @@ export const smm_structure = `
                     <div class="smm-structure-title">鱼骨图</div>
                     <div class="smm-structure-desc">像鱼骨头一样排列</div>
                 </div>
-            </div>
+            </div>-->
         </div>
 `

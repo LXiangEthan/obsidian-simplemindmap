@@ -50,21 +50,25 @@ If your plugin does not need CSS, delete this file.
 /*	backdrop-filter: blur(5px);*/
 /*	overflow: hidden;*/
 /*}*/
-.embed-link-smm{
-	width: 100% !important;
-	height: 100% !important;
-}
+/*.embed-link-smm{*/
+/*	width: 100% !important;*/
+/*	height: 100% !important;*/
+/*}*/
 .internal-embed .file-embed-title {
-	display: none;
+	display: none !important;
 }
 .internal-embed{
 	padding: 0 !important;
+	background-color: transparent;
 }
-.internal-embed img{
-	width: 100%;
-	height: 100%;
-	max-height: 720px !important;
+.internal-embed:hover{
+	background-color: transparent !important;
 }
+/*.internal-embed img{*/
+/*	width: 100%;*/
+/*	height: 100%;*/
+/*	max-height: 720px !important;*/
+/*}*/
 .miniMapContainer,.viewBoxContainer{
 	position: absolute;
 	width: 180px;
@@ -223,7 +227,7 @@ If your plugin does not need CSS, delete this file.
 	margin: 0 8px;
 }
 /* 按钮样式 */
-.smm-btn {
+.smm-btn{
 	appearance: none !important;
 	-webkit-appearance: none !important; /* Safari/Chrome */
 	-moz-appearance: none !important;    /* Firefox */
@@ -297,7 +301,7 @@ If your plugin does not need CSS, delete this file.
 	max-width: 600px;
 	margin: 0 auto;
 	background-color: rgb(255, 255, 255);
-	padding: 5%;
+	padding: 16px 60px;
 }
 
 /* 备注标题 */
@@ -376,6 +380,9 @@ If your plugin does not need CSS, delete this file.
 .smm-note-btn.primary:hover {
 	background-color: #0369a1;
 }
+
+
+
 /*-----------------------------*/
 /*链接*/
 
@@ -392,7 +399,7 @@ If your plugin does not need CSS, delete this file.
 	background-color: #ffffff;
 	border-radius: 8px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-	padding: 16px;
+	padding: 30px 16px;
 }
 
 /* 链接标题 */
@@ -574,7 +581,7 @@ If your plugin does not need CSS, delete this file.
 	width:80%;
 	max-width: 600px;
 	margin: 0 auto;
-	padding: 16px;
+	padding: 60px 16px;
 }
 
 /* 标签标题 */
@@ -889,7 +896,7 @@ If your plugin does not need CSS, delete this file.
 	top: 50px;
 	width: 80%;
 	padding: 18px;
-	max-width: 500px;
+	max-width: 600px;
 	margin: 0 auto;
 	background-color: #ffffff;
 	border-radius: 8px;
@@ -905,8 +912,6 @@ If your plugin does not need CSS, delete this file.
 /* 标题栏 */
 .smm-formula-header {
 	padding: 12px 16px;
-	background-color: #f1f5f9;
-	border-bottom: 1px solid #e2e8f0;
 	font-size: 16px;
 	font-weight: 500;
 	color: #334155;
@@ -917,7 +922,7 @@ If your plugin does not need CSS, delete this file.
 	width: 100%;
 	min-height: 120px;
 	padding: 12px 16px;
-	border: none;
+	border: 1px #94A3B8 solid;
 	font-size: 14px;
 	color: #334155;
 	font-family: Consolas, Monaco, 'Andale Mono', monospace;
@@ -936,8 +941,6 @@ If your plugin does not need CSS, delete this file.
 	justify-content: flex-end;
 	gap: 8px;
 	padding: 12px 16px;
-	background-color: #f1f5f9;
-	border-top: 1px solid #e2e8f0;
 }
 
 /* 控制按钮 */
@@ -1308,18 +1311,23 @@ If your plugin does not need CSS, delete this file.
 
 .smm-nodestyle-container {
 	width: 100%;
-	padding: 10px;
-	border-radius: 4px;
-	font-family: Arial, sans-serif;
-	background-color: #fff;
-	box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-	font-size: 12px;
+	padding: 16px;
+	border-radius: 8px;
+	font-family: 'Inter', sans-serif;
+	background-color: #ffffff;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+	font-size: 14px;
+	transition: all 0.2s ease;
+}
+
+.smm-nodestyle-container:hover {
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .smm-nodestyle-section {
-	margin-bottom: 8px;
-	padding-bottom: 8px;
-	border-bottom: 1px solid #eee;
+	margin-bottom: 16px;
+	padding-bottom: 16px;
+	border-bottom: 1px solid #f0f0f0;
 }
 
 .smm-nodestyle-section:last-child {
@@ -1329,18 +1337,19 @@ If your plugin does not need CSS, delete this file.
 }
 
 .smm-nodestyle-title {
-	font-size: 13px;
-	font-weight: bold;
-	margin: 0 0 6px 0;
-	color: #333;
+	font-size: 16px;
+	font-weight: 600;
+	margin: 0 0 8px 0;
+	color: #2c3e50;
 	padding: 2px 0;
+	letter-spacing: -0.02em;
 }
 
 .smm-nodestyle-subsection {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
-	gap: 8px;
-	margin-bottom: 8px;
+	gap: 12px;
+	margin-bottom: 12px;
 }
 
 .smm-nodestyle-field {
@@ -1349,61 +1358,105 @@ If your plugin does not need CSS, delete this file.
 }
 
 .smm-nodestyle-label {
-	font-size: 11px;
-	margin-bottom: 2px;
-	color: #666;
+	font-size: 12px;
+	margin-bottom: 4px;
+	color: #7f8c8d;
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
 }
 
 .smm-nodestyle-select,
 .smm-nodestyle-input,
 .smm-nodestyle-button {
-	height: 24px;
-	border: 1px solid #ccc;
-	border-radius: 2px;
-	font-size: 12px;
-	padding: 0 4px;
-	background-color: #fff;
+	height: 32px;
+	border: 1px solid #e5e7eb;
+	border-radius: 4px;
+	font-size: 14px;
+	padding: 0 8px;
+	background-color: #f8fafc;
 	box-sizing: border-box;
+	transition: all 0.15s ease;
+}
+
+.smm-nodestyle-select:focus,
+.smm-nodestyle-input:focus {
+	outline: none;
+	border-color: #3b82f6;
+	box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
 .smm-nodestyle-select {
-	min-width: 60px;
+	min-width: 80px;
+	appearance: none;
+	padding-right: 28px;
 }
 
 .smm-nodestyle-input[type="color"] {
-	width: 24px;
-	padding: 1px;
+	width: 32px;
+	padding: 2px;
+	cursor: pointer;
 }
 
 .smm-nodestyle-input[type="range"] {
-	height: 20px;
+	height: 6px;
 	padding: 0;
+	background: #e2e8f0;
+	border-radius: 3px;
+}
+
+.smm-nodestyle-input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 16px;
+	height: 16px;
+	background: #3b82f6;
+	border-radius: 50%;
+	cursor: pointer;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	transition: all 0.15s ease;
+}
+
+.smm-nodestyle-input[type="range"]::-webkit-slider-thumb:hover {
+	background: #2563eb;
+	transform: scale(1.1);
 }
 
 .smm-nodestyle-button {
-	width: 24px;
+	width: 32px;
 	text-align: center;
 	cursor: pointer;
-	background-color: #f5f5f5;
+	background-color: #f1f5f9;
 	padding: 0;
+	color: #334155;
 }
 
 .smm-nodestyle-button:hover {
-	background-color: #e8e8e8;
+	background-color: #e2e8f0;
+}
+
+.smm-nodestyle-button:active {
+	background-color: #cbd5e1;
 }
 
 .smm-nodestyle-stylebuttons {
 	display: flex;
-	gap: 4px;
+	gap: 6px;
 }
 
 .smm-nodestyle-checkbox {
-	margin-top: 5px;
+	margin-top: 6px;
+	display: flex;
+	align-items: center;
+}
+
+.smm-nodestyle-checkbox input {
+	margin-right: 6px;
 }
 
 /* 特殊样式 */
 .smm-nodestyle-bold {
-	font-weight: bold;
+	font-weight: 600;
 }
 
 .smm-nodestyle-italic {
@@ -1417,24 +1470,6 @@ If your plugin does not need CSS, delete this file.
 /* 单行布局 */
 .smm-nodestyle-singleline {
 	grid-template-columns: repeat(4, 1fr);
-}
-
-/* 自定义滑块样式 */
-.smm-nodestyle-input[type="range"] {
-	-webkit-appearance: none;
-	appearance: none;
-	background: #f0f0f0;
-	border-radius: 5px;
-}
-
-.smm-nodestyle-input[type="range"]::-webkit-slider-thumb {
-	-webkit-appearance: none;
-	appearance: none;
-	width: 12px;
-	height: 12px;
-	background: #1e3556;
-	border-radius: 50%;
-	cursor: pointer;
 }
 /*--------------------------------------*/
 /*整体样式*/
@@ -1904,7 +1939,7 @@ If your plugin does not need CSS, delete this file.
 .smm-list {
 	position: absolute;
 	top:50px;
-	right: 15%;
+	right: 0;
 	background-color: white;
 	border-radius: 8px;
 	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
@@ -2116,7 +2151,7 @@ If your plugin does not need CSS, delete this file.
 	height: 16px;
 	border-radius: 2px;
 	margin-right: 6px;
-	background: #f0f0f0;
+	background: transparent;
 	cursor: pointer;
 	font-size: 12px;
 	color: #555;
@@ -2141,3 +2176,353 @@ If your plugin does not need CSS, delete this file.
 }
 /*transform: matrix(1, 0, 0, 1, 823.6, 211.5) !important;*/
 /*-----------------------*/
+/*右键菜单*/
+
+
+
+/* 右键菜单样式 */
+.smm--right-menu-context {
+	max-height: 300px;
+	overflow: scroll;
+	position: absolute;
+	z-index: 10000;
+	width: 200px;
+	background: white;
+	border-radius: 0.5rem;
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+	opacity: 0;
+	transform: scale(0.9);
+	transform-origin: top left;
+	transition: opacity 0.1s ease, transform 0.1s ease;
+	pointer-events: none;
+}
+
+.smm--right-menu-context.visible {
+	opacity: 1;
+	transform: scale(1);
+	pointer-events: all;
+}
+
+.smm--right-menu-context-node {
+	position: absolute;
+	z-index: 10000;
+	max-height: 300px;
+	overflow: scroll;
+	width: 200px;
+	background: white;
+	border-radius: 0.5rem;
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+	opacity: 0;
+	transform: scale(0.9);
+	transform-origin: top left;
+	transition: opacity 0.1s ease, transform 0.1s ease;
+	pointer-events: none;
+}
+
+.smm--right-menu-context-node.visible {
+	opacity: 1;
+	transform: scale(1);
+	pointer-events: all;
+}
+
+.smm--right-menu-item {
+	padding: 0.75rem 1rem;
+	display: flex;
+	align-items: center;
+	color: #334155;
+	cursor: pointer;
+	transition: background-color 0.15s ease;
+	gap: 0.75rem;
+	font-size: 0.9rem;
+	border-bottom: 1px solid #f1f5f9;
+}
+
+.smm--right-menu-item:last-child {
+	border-bottom: none;
+}
+
+.smm--right-menu-item:hover {
+	background-color: #f1f5f9;
+}
+
+.smm--right-menu-item i {
+	width: 1.25rem;
+	text-align: center;
+	color: #64748b;
+}
+
+.smm--right-menu-divider {
+	height: 1px;
+	background-color: #f1f5f9;
+	margin: 0.25rem 0;
+}
+
+/* 动画效果 */
+@keyframes smm--right-menu-fadeIn {
+	from { opacity: 0; transform: scale(0.95); }
+	to { opacity: 1; transform: scale(1); }
+}
+
+.smm--right-menu-fade-in {
+	animation: smm--right-menu-fadeIn 0.15s ease forwards;
+}
+/*-----------------------------------------*/
+/*富文本编辑工具栏*/
+
+.smm-float-button-group {
+	padding: 10px;
+	position: absolute;
+	z-index: 999;
+	display: flex;
+	background-color: white;
+	border-radius: 8px;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+	transform: translateY(20px);
+	opacity: 0;
+	visibility: hidden;
+	transition: all 0.3s ease;
+}
+
+.smm-float-button-group.active {
+	transform: translateY(0);
+	opacity: 1;
+	visibility: visible;
+}
+
+.smm-float-btn {
+	appearance: none !important;
+	-webkit-appearance: none !important; /* Safari/Chrome */
+	-moz-appearance: none !important;    /* Firefox */
+	border: none !important;
+	outline: none !important;
+	box-shadow: none !important; /* 确保没有阴影模拟边框 */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	padding: 12px 16px;
+	border: none;
+	cursor: pointer;
+	font-size: 14px;
+	transition: all 0.3s ease;
+	white-space: nowrap;
+	background-color: white;
+	color: #333;
+}
+
+.smm-float-btn:not(:last-child) {
+	border-right: 1px solid #e5e7eb;
+}
+
+.smm-float-btn:hover {
+	background-color: #f3f4f6;
+}
+
+.smm-float-btn.primary {
+	background-color: #3B82F6;
+	color: white;
+}
+
+.smm-float-btn.primary:hover {
+	background-color: #2563EB;
+}
+
+.smm-float-btn.secondary {
+	background-color: #10B981;
+	color: white;
+}
+
+.smm-float-btn.secondary:hover {
+	background-color: #059669;
+}
+
+.smm-float-btn.accent {
+	background-color: #8B5CF6;
+	color: white;
+}
+
+.smm-float-btn.accent:hover {
+	background-color: #7C3AED;
+}
+
+/* 下拉菜单样式 */
+.smm-float-dropdown {
+	position: relative;
+}
+
+.smm-float-dropdown-menu {
+	position: absolute;
+	right: 0;
+	/*bottom: calc(100% + 8px);*/
+	background-color: white;
+	border-radius: 8px;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+	min-width: 180px;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(10px);
+	transition: all 0.3s ease;
+	max-height: 360px;
+	overflow: scroll;
+}
+
+.smm-float-dropdown-menu.active {
+	z-index: 99999;
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+}
+
+.smm-float-dropdown-item {
+	z-index: 99999;
+	padding: 10px 16px;
+	color: #333;
+	text-decoration: none;
+	display: block;
+	font-size: 14px;
+	transition: background-color 0.2s ease;
+}
+
+.smm-float-dropdown-item:hover {
+	background-color: #f3f4f6;
+}
+
+/* 颜色选择器样式 */
+.smm-float-color-picker {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	width: 40px;
+	height: 40px;
+	border: none;
+	background-color: transparent;
+	cursor: pointer;
+	margin-left: 4px;
+}
+
+.smm-float-color-picker::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+
+.smm-float-color-picker::-webkit-color-swatch {
+	border-radius: 50%;
+	border: 2px solid #fff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.smm-float-color-picker::-moz-color-swatch {
+	border-radius: 50%;
+	border: 2px solid #fff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* 内容区域样式 */
+.smm-float-demo-container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 48px 24px;
+}
+
+.smm-float-title {
+	font-size: 28px;
+	font-weight: 700;
+	color: #1f2937;
+	margin-bottom: 16px;
+}
+
+.smm-float-description {
+	font-size: 16px;
+	color: #4b5563;
+	margin-bottom: 48px;
+	max-width: 800px;
+}
+
+.smm-float-preview-area {
+	background-color: white;
+	border-radius: 12px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+	padding: 48px;
+	min-height: 400px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+}
+
+.smm-float-preview-text {
+	color: #9ca3af;
+	font-size: 18px;
+}
+
+/* 主按钮样式 */
+.smm-float-main-btn {
+	width: 56px;
+	height: 56px;
+	background-color: #3B82F6;
+	color: white;
+	border-radius: 50%;
+	border: none;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 20px;
+	transition: all 0.3s ease;
+	margin-top: 12px;
+}
+
+.smm-float-main-btn:hover {
+	background-color: #2563EB;
+	transform: scale(1.05);
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* 响应式设计 */
+@media (max-width: 640px) {
+	.smm-float-demo-container {
+		padding: 32px 16px;
+	}
+
+	.smm-float-title {
+		font-size: 24px;
+	}
+
+	.smm-float-description {
+		font-size: 14px;
+	}
+
+	.smm-float-preview-area {
+		padding: 32px 16px;
+		min-height: 300px;
+	}
+
+	.smm-float-container {
+		bottom: 16px;
+		right: 16px;
+	}
+
+	.smm-float-main-btn {
+		width: 48px;
+		height: 48px;
+		font-size: 18px;
+	}
+
+	.smm-float-button-group {
+		border-radius: 24px;
+	}
+
+	.smm-float-btn {
+		padding: 8px 10px;
+		font-size: 12px;
+	}
+
+	.smm-float-dropdown-menu {
+		min-width: 160px;
+	}
+
+	.smm-float-dropdown-item {
+		padding: 8px 12px;
+		font-size: 13px;
+	}
+}

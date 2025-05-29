@@ -26,7 +26,7 @@ import {smm_panel} from "./renders/panel";
 // @ts-ignore
 import {buttons} from "./renders/buttons";
 // @ts-ignore
-import {nodeIconList} from 'simple-mind-map/src/svg/icons'
+import {nodeIconList} from './renders/icon'
 
 // @ts-ignore
 import NodeImgAdjust from 'simple-mind-map/src/plugins/NodeImgAdjust.js'
@@ -67,6 +67,17 @@ import moment = require("moment")
 import Watermark from 'simple-mind-map/src/plugins/Watermark.js'
 // import Watermark from 'simple-mind-map/src/Watermark.js' v0.6.0以下版本使用该路径
 
+// @ts-ignore
+import Painter from 'simple-mind-map/src/plugins/Painter.js'
+
+// @ts-ignore
+import ExportPDF from "simple-mind-map/src/plugins/ExportPDF";
+// @ts-ignore
+import ExportXMind from 'simple-mind-map/src/plugins/ExportXMind'
+
+MindMap.usePlugin(ExportPDF)
+MindMap.usePlugin(ExportXMind)
+MindMap.usePlugin(Painter)
 MindMap.usePlugin(Watermark)
 MindMap.usePlugin(Demonstrate)
 MindMap.usePlugin(RainbowLines)
@@ -91,7 +102,7 @@ export const VIEW_TYPE_SMM = "smm-view";
 const AsyncLock = require('async-lock');
 const lock = new AsyncLock();
 export class SMMView extends TextFileView {
-	private mindMap: any
+	public mindMap: any
 	private miap: any;
 	private viap: any;
 	private smm_mindmap: HTMLDivElement;
@@ -104,10 +115,9 @@ export class SMMView extends TextFileView {
 	private isDemoing = false;
 	private noResize = false;
 	private saveTimer: number;
-	private file_lock = false;
 	private refuse = false;
+	private file_lock = false;
 	clear() {
-		console.log("清理一次")
 		this.data = '';
 		if (this.mindMap) {
 			this.mindMap.destroy();
@@ -120,13 +130,6 @@ export class SMMView extends TextFileView {
 	}
 
 	async onOpen() {
-		console.log("文件打开")
-		this.registerEvent(this.app.vault.on('modify',(file)=>{
-			this.file_lock = true
-		}))
-		this.registerEvent(this.app.workspace.on('file-open',()=>{
-			this.file_lock = false
-		}))
 		// eslint-disable-next-line no-constant-condition
 		this.registerEvent(this.app.workspace.on('active-leaf-change', async (leaf) => {
 			if (this.app.workspace.getActiveFile()?.extension == 'smm') {
@@ -137,6 +140,13 @@ export class SMMView extends TextFileView {
 				return
 			}
 		}))
+		this.registerEvent(this.app.workspace.on('file-open',()=>{
+			this.file_lock = false
+		}))
+		this.registerEvent(this.app.workspace.on('layout-change',()=>{
+			this.file_lock = false
+		}))
+
 	}
 
 	async onClose() {
@@ -155,6 +165,7 @@ export class SMMView extends TextFileView {
 	}
 
 	setViewData(data: string) {
+		this.contentEl.style.overflow = 'hidden'
 		if(this.file_lock){
 			return false
 		}
@@ -231,6 +242,7 @@ export class SMMView extends TextFileView {
 					viewData: view,
 				})
 				setTimeout(async () => {
+					this.mindMap.file = this.currentFile
 					// @ts-ignore
 					this.addEventWithButton()
 					this.outLinkrefresh()
@@ -254,6 +266,7 @@ export class SMMView extends TextFileView {
 						viewData: view,
 					})
 						setTimeout(async () => {
+							this.mindMap.file = this.currentFile
 							// @ts-ignore
 							this.addEventWithButton()
 							this.outLinkrefresh()
@@ -270,29 +283,45 @@ export class SMMView extends TextFileView {
 				}, 1000)
 			}
 	}
-	async saveDataIntoFile() {
+	async simpleSaveSvg(){
+		await lock.acquire('resource', async () => {
+			const current = this.currentFile
+			const content = await this.mindMap.getData(true)
+			const svgObj = await this.mindMap.export('svg', false, '')
+			content.svgData = svgObj
+			if (current instanceof TFile && current.extension == "smm") {
+				try {
+					clearTimeout(this.saveTimer)
+					// @ts-ignore
+					this.saveTimer = setTimeout(() => {
+						this.file_lock = true
+						this.app.vault.modify(current, JSON.stringify(content)).then(()=>{
+							this.file_lock = false
+						})
+					}, 100)
+				}catch(e){
+					new Notice(e)
+				}
+			}
+		})
+	}
+	public async saveDataIntoFile() {
 		await lock.acquire('resource', async () => {
 		const current = this.currentFile
-		// @ts-ignore
-		const thisNode = this.mindMap.renderer.textEdit.getCurrentEditNode()?this.mindMap.renderer.textEdit.getCurrentEditNode():null
 		const content = await this.mindMap.getData(true)
-		const svgObj = await this.mindMap.export('svg', false, '')
-		content.svgData = svgObj
-		if(thisNode) {
-			await this.mindMap.renderer.textEdit.show({node: thisNode,isInserting:true})
-		}
+		content.svgData = JSON.parse(this.data).svgData
 		if (current instanceof TFile && current.extension == "smm") {
 			try {
 				clearTimeout(this.saveTimer)
 				// @ts-ignore
 				this.saveTimer = setTimeout(() => {
 						this.file_lock = true
-						this.app.vault.modify(current, JSON.stringify(content)).then(() => {
+						this.app.vault.modify(current, JSON.stringify(content)).then(()=>{
 							this.file_lock = false
 						})
-				}, 50)
+				}, 100)
 			}catch(e){
-				console.log(e)
+				new Notice(e)
 			}
 		}
 	})
@@ -587,16 +616,27 @@ export class SMMView extends TextFileView {
 				}
 			}
 		// @ts-ignore
-		this.contentEl.querySelector("#smm-list-table").onclick = ()=>{
+		this.contentEl.querySelector("#smm-list-table").addEventListener('mouseenter',()=>{
 			const list = this.contentEl.querySelector("#smm-list-tables")
 			// @ts-ignore
-			if(list.style.display == 'none'){
+			list.removeAttribute('style')
+		})
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-exit-button-panel').onclick = ()=>{
+			// @ts-ignore
+			this.contentEl.querySelector('#smm-panel-container').style.display = "none"
+		}
+		// @ts-ignore
+		this.contentEl.querySelector("#smm-list-tables").addEventListener("mouseleave", ()=>{
+			setTimeout(()=>{
 				// @ts-ignore
-				list.removeAttribute('style')
-			}else{
-				// @ts-ignore
-				list.style.display = 'none';
-			}
+				this.contentEl.querySelector("#smm-list-tables").style.display = "none"
+			},200)
+		})
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-save-svg-button').onclick =async  ()=>{
+				new Notice('刷新SVG成功',1000)
+				await this.simpleSaveSvg()
 		}
 		// @ts-ignore
 		this.contentEl.querySelector(".smm-tag-delete").onclick = ()=>{
@@ -606,19 +646,21 @@ export class SMMView extends TextFileView {
 			this.contentEl.querySelector(".smm-tag-input").focus()
 		}
 
-		// @ts-ignore
-		this.mindMap.on("node_icon_mouseenter",(t,i,e,n)=>{
-			// @ts-ignore
-			this.mindMap.on('node_icon_click',(t: { setIcon: (arg0: never[]) => void; })=>{
-				t.setIcon([])
-			})
-		})
+		// // @ts-ignore
+		// this.mindMap.on("node_icon_mouseenter",(t,i,e,n)=>{
+		// 	// @ts-ignore
+		// 	this.mindMap.on('node_icon_click',(t: { setIcon: (arg0: never[]) => void; })=>{
+		// 		t.setIcon([])
+		// 	})
+		// })
 		this.setUniversalStyle()
 		// @ts-ignore
 		this.contentEl.querySelector('#smm-demostrate-button').onclick =async  ()=>{
 			this.mindMap?.resize()
 			// @ts-ignore
 			this.noResize = true
+			// @ts-ignore
+			this.contentEl.querySelector('.miniMapContainer').style.display = 'none'
 			this.mindMap.demonstrate.enter()
 		}
 		this.mindMap.on('exit_demonstrate',()=>{
@@ -660,7 +702,6 @@ export class SMMView extends TextFileView {
 					item.onclick = ()=>{
 						// @ts-ignore
 						const file = this.app.vault.getAbstractFileByPath(item.children[2].innerText)
-						console.log(file)
 						if(!file){
 							new Notice('插入内链失败',3000)
 							return
@@ -741,6 +782,22 @@ export class SMMView extends TextFileView {
 			this.mindMap.export('md', true, '未命名')
 		}
 		// @ts-ignore
+		this.contentEl.querySelector('#smm-export-png').onclick = ()=>{
+			this.mindMap.export('png', true, '未命名')
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-export-xmind').onclick = ()=>{
+			this.mindMap.export('xmind', true, '未命名')
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-export-pdf').onclick = ()=>{
+			this.mindMap.export('pdf', true, '未命名')
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-export-txt').onclick = ()=>{
+			this.mindMap.export('txt', true, '未命名')
+		}
+		// @ts-ignore
 		this.contentEl.querySelector('#smm-if-water').addEventListener('change', async ()=>{
 			// @ts-ignore
 			if(this.contentEl.querySelector('#smm-if-water').checked){
@@ -771,6 +828,372 @@ export class SMMView extends TextFileView {
 				})
 			}
 		})
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-clear-s').onclick  = ()=>{
+			this.mindMap.painter.startPainter()
+		}
+		// @ts-ignore
+		let mousedownX = 0
+		let mousedownY = 0
+		let isMousedown = false
+		this.mindMap.on('svg_mousedown', (e: { which: number; clientX: number; clientY: number; }) => {
+			// 如果不是右键点击直接返回
+			if (e.which !== 3) {
+				return
+			}
+			mousedownX = e.clientX
+			mousedownY = e.clientY
+			isMousedown  = true
+		})
+		this.mindMap.on('node_contextmenu', (e: { clientX: number; clientY: number; }, node: any) => {
+			const menu = this.contentEl.querySelector('#contextMenu-node')
+			const left = node.getRectInSvg().left
+			const top = node.getRectInSvg().top
+
+			const pwidth = this.mindMap.el.offsetWidth
+			const pheight = this.mindMap.el.offsetHeight
+			// @ts-ignore
+			const width = menu.offsetWidth
+			// @ts-ignore
+			const height = menu.offsetHeight
+			// @ts-ignore
+			if(pwidth - left > width && pheight - top > height){
+				// @ts-ignore
+				menu.style.left = left+50+'px'
+				// @ts-ignore
+				menu.style.top = top +25+'px'
+			}
+			// @ts-ignore
+			if(pwidth - left < width){
+				// @ts-ignore
+				menu.style.left = left - width -50+'px'
+				// @ts-ignore
+				menu.style.top = top +25+'px'
+			}
+			// @ts-ignore
+			if(pheight - top < height){
+				// @ts-ignore
+				menu.style.left = left +50+'px'
+				// @ts-ignore
+				menu.style.top = top - height- 25+'px'
+			}
+
+			// @ts-ignore
+			this.contentEl.querySelector('#contextMenu').classList.remove('visible');
+			// @ts-ignore
+			menu.classList.add('visible');
+		})
+		this.mindMap.on('mouseup', (e: { clientX: number; clientY: number; }) => {
+			if (!isMousedown) {
+				// @ts-ignore
+				this.contentEl.querySelector('.smm--right-menu-context').classList.remove('visible');
+				return
+			}
+			isMousedown = false
+			// 如果鼠标松开和按下的距离大于3，则不认为是点击事件
+			if (
+				Math.abs(mousedownX - e.clientX) > 3 ||
+				Math.abs(mousedownY - e.clientY) > 3
+			) {
+				return
+			}
+			const menu = this.contentEl.querySelector('#contextMenu')
+			const pwidth = this.mindMap.el.offsetWidth
+			const pheight = this.mindMap.el.offsetHeight
+			// @ts-ignore
+			const width = menu.offsetWidth
+			// @ts-ignore
+			const height = menu.offsetHeight
+			// @ts-ignore
+			if(pwidth - e.offsetX > width && pheight - e.offsetY > height){
+				// @ts-ignore
+				menu.style.left = e.offsetX+10+'px'
+				// @ts-ignore
+				menu.style.top = e.offsetY +10+'px'
+			}
+			// @ts-ignore
+			if(pwidth - e.offsetX < width){
+				// @ts-ignore
+				menu.style.left = e.offsetX - width -10+'px'
+				// @ts-ignore
+				menu.style.top = e.offsetY +10+'px'
+			}
+			// @ts-ignore
+			if(pheight - e.offsetY < height){
+				// @ts-ignore
+				menu.style.left = e.offsetX +10+'px'
+				// @ts-ignore
+				menu.style.top = e.offsetY - height- 10+'px'
+			}
+			// @ts-ignore
+			if(this.contentEl.querySelector('#smm-panel-container')?.style?.display == 'none'){
+				// @ts-ignore
+				this.contentEl.querySelector('#smm-open-panel-span').innerHTML = '打开侧边栏'
+			}else{
+				// @ts-ignore
+				this.contentEl.querySelector('#smm-open-panel-span').innerHTML = '关闭侧边栏'
+			}
+			// @ts-ignore
+			this.contentEl.querySelector('#contextMenu-node').classList.remove('visible');
+			// @ts-ignore
+			menu.classList.add('visible');
+
+		})
+		const hide = () => {
+			// @ts-ignore
+			this.contentEl.querySelector('#contextMenu').classList.remove('visible');
+			// @ts-ignore
+			this.contentEl.querySelector('#contextMenu-node').classList.remove('visible');
+			// @ts-ignore
+			this.contentEl.querySelector('#smm-list-tables').style.display = 'none'
+			// @ts-ignore
+			this.contentEl.querySelector('#smmFloatButtonGroup').classList.remove('active')
+			// @ts-ignore
+			this.contentEl.querySelector('#smmFloatDropdownMenu').classList.remove('active')
+			// @ts-ignore
+			this.contentEl.querySelector('#smmFloatDropdownMenu2').classList.remove('active')
+		}
+		this.mindMap.on('node_click', hide)
+		this.mindMap.on('draw_click', hide)
+		this.mindMap.on('expand_btn_click', hide)
+		// @ts-ignore
+		this.contentEl.querySelector('#contextMenu-node').addEventListener('click', hide)
+		// @ts-ignore
+		this.contentEl.querySelector('#contextMenu').addEventListener('click', hide)
+		let opening_chan = false
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-open-panel').onclick = ()=>{
+			if(opening_chan){
+				new Notice('请先退出禅模式')
+				return
+			}
+			// @ts-ignore
+			if(this.contentEl.querySelector('#smm-panel-container')?.style?.display == 'none'){
+				// @ts-ignore
+				this.contentEl.querySelector('#smm-panel-container').removeAttribute('style')
+			}else{
+				// @ts-ignore
+				this.contentEl.querySelector('#smm-panel-container').style.display = 'none'
+			}
+
+		}
+
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-quiet-mode').onclick = ()=>{
+			if(!opening_chan) {
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				opening_chan = true
+				// @ts-ignore
+				this.contentEl.querySelector('.miniMapContainer').style.display = 'none'
+				// @ts-ignore
+				this.contentEl.querySelector('.smm-toolbar').style.display = 'none'
+				// @ts-ignore
+				this.contentEl.querySelector('#smm-panel-container').style.display = 'none'
+				// @ts-ignore
+				this.contentEl.querySelector('#smm-SL').style.display = 'none'
+				// @ts-ignore
+				this.contentEl.querySelector('#smm-chan-text').innerHTML = '关闭禅模式'
+			}else{
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				opening_chan = false
+				// @ts-ignore
+				this.contentEl.querySelector('.smm-toolbar').removeAttribute('style')
+				// @ts-ignore
+				this.contentEl.querySelector('#smm-SL').removeAttribute('style')
+				// @ts-ignore
+				this.contentEl.querySelector('#smm-chan-text').innerHTML = '开启禅模式'
+			}
+		}
+		// @ts-ignore
+		this.contentEl.querySelector("#smm-copy-node").onclick = ()=>{
+			this.mindMap.renderer.copy()
+		}
+
+		// @ts-ignore
+		this.contentEl.querySelector("#smm-cut-node").onclick = ()=>{
+			this.mindMap.renderer.cut()
+		}
+
+		// @ts-ignore
+		this.contentEl.querySelector("#smm-paste-node").onclick = ()=>{
+			this.mindMap.renderer.paste()
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-collapse-allnode').onclick = ()=>{
+				this.mindMap.execCommand('EXPAND_ALL')
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-uncollapse-allnode').onclick = ()=>{
+			this.mindMap.execCommand('UNEXPAND_ALL')
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-up-node').onclick = ()=>{
+			this.mindMap.execCommand('UP_NODE')
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-down-node').onclick = ()=>{
+			this.mindMap.execCommand('DOWN_NODE')
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-collapse-one-allnode').onclick = ()=>{
+			this.mindMap.execCommand('UNEXPAND_TO_LEVEL',1)
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-collapse-two-allnode').onclick = ()=>{
+			this.mindMap.execCommand('UNEXPAND_TO_LEVEL',2)
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-collapse-three-allnode').onclick = ()=>{
+			this.mindMap.execCommand('UNEXPAND_TO_LEVEL',3)
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-fit-window').onclick = ()=>{
+			this.mindMap.view.fit()
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-delete-icon').onclick = ()=>{
+			this.node.setIcon([])
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-delete-hyperlink').onclick = ()=>{
+			this.node.setHyperlink('','')
+		}
+
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-INSERT_NODE').onclick = ()=>{
+			this.mindMap.execCommand('INSERT_NODE')
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-INSERT_CHILD_NODE').onclick = ()=>{
+			this.mindMap.execCommand('INSERT_CHILD_NODE')
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-INSERT_PARENT_NODE').onclick = ()=>{
+			this.mindMap.execCommand('INSERT_PARENT_NODE')
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-REMOVE_NODE').onclick = ()=>{
+			this.mindMap.execCommand('REMOVE_NODE')
+		}
+		// @ts-ignore
+		this.mindMap.on('rich_text_selection_change', (hasRange, rect, formatInfo) => {
+			if(!hasRange){
+				return
+			}
+			const left = this.node.getRectInSvg().left + rect.width/2 + 'px'
+			const top = this.node.getRectInSvg().top - 60+ 'px'
+			const el = this.contentEl.querySelector('#smmFloatButtonGroup')
+			// @ts-ignore
+			el.style.left = left
+			// @ts-ignore
+			el.style.top = top
+			// @ts-ignore
+			el.classList.add('active')
+		})
+		// @ts-ignore
+		this.contentEl.querySelector('#smmFloatButtonGroup').onclick = (e)=>{
+			// hide()
+			e.stopPropagation()
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-float-bold').onclick = ()=>{
+			this.mindMap.richText.formatText({
+				bold: true
+			},false,false)
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-float-italic').onclick = ()=>{
+			this.mindMap.richText.formatText({
+				italic: true
+			},false,false)
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-float-underline').onclick = ()=>{
+			this.mindMap.richText.formatText({
+				underline: true
+			},false,false)
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-float-delete').onclick = ()=>{
+			this.mindMap.richText.formatText({
+				strike: true
+			},false,false)
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-float-clear').onclick = ()=>{
+			this.mindMap.richText.removeFormat()
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smmWordClass').onclick = ()=>{
+			// @ts-ignore
+			this.contentEl.querySelector('#smmFloatDropdownMenu').classList.toggle('active')
+		}
+		// @ts-ignore
+		for(const i of this.contentEl.querySelectorAll('.smm-float-dropdown-item1')){
+			i.onclick = ()=>{
+				this.mindMap.richText.formatText({
+					font: i.innerHTML
+				})
+				// @ts-ignore
+				this.contentEl.querySelector('#smmFloatDropdownMenu').classList.remove('active')
+			}
+		}
+
+		// @ts-ignore
+		this.contentEl.querySelector('#smmWordSize').onclick = ()=>{
+			// @ts-ignore
+			this.contentEl.querySelector('#smmFloatDropdownMenu2').classList.toggle('active')
+		}
+		// @ts-ignore
+		for(const i of this.contentEl.querySelectorAll('.smm-float-dropdown-item2')){
+			i.onclick = ()=>{
+				this.mindMap.richText.formatText({
+					size: i.innerHTML+'px'
+				})
+				// @ts-ignore
+				this.contentEl.querySelector('#smmFloatDropdownMenu2').classList.remove('active')
+			}
+		}
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-word-color').addEventListener('change',()=>{
+			// @ts-ignore
+			this.mindMap.richText.formatText({
+				// @ts-ignore
+				color: this.contentEl.querySelector('#smm-word-color').value
+			})
+		})
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-float-bg-color').addEventListener('change',()=>{
+			// @ts-ignore
+			this.mindMap.richText.formatText({
+				// @ts-ignore
+				background: this.contentEl.querySelector('#smm-float-bg-color').value
+			})
+		})
+		// @ts-ignore
+		this.contentEl.querySelector('#smm-delete-svg-button').addEventListener('click',async ()=>{
+			await lock.acquire('resource', async () => {
+				const current = this.currentFile
+				const content = await this.mindMap.getData(true)
+				content.svgData = ''
+				if (current instanceof TFile && current.extension == "smm") {
+					try {
+						clearTimeout(this.saveTimer)
+						// @ts-ignore
+						this.saveTimer = setTimeout(() => {
+							this.app.vault.modify(current, JSON.stringify(content)).then(() => {
+								new Notice('清除成功',3000)
+							})
+						}, 100)
+					} catch (e) {
+						new Notice(e)
+					}
+				}
+			})
+		})
+		// this.mindMap.on('hide_text_edit',()=>{
+		// 	this.setSameWidth()
+		// })
 	}
 	renderMinimap(){
 		// @ts-ignore
@@ -842,7 +1265,6 @@ export class SMMView extends TextFileView {
 	
 		// @ts-ignore
 		this.contentEl.querySelector("#smm-add-link-button").onclick = ()=>{
-			console.log("插入链接")
 			// @ts-ignore
 			if(urlTypeBtn.classList.contains('active')){
 				// @ts-ignore
@@ -1422,13 +1844,11 @@ export class SMMView extends TextFileView {
 		}
 		// @ts-ignore
 		this.contentEl.querySelector('.smm-ustyle-rainbow-line').onclick = ()=>{
-			console.log(this.mindMap.rainbowLines)
 			this.mindMap.rainbowLines.updateRainLinesConfig({open:true})
 			this.mindMap.emit('data_change')
 		}
 		// @ts-ignore
 		this.contentEl.querySelector('#smm-close-rainbow').onclick = ()=>{
-			console.log(this.mindMap.rainbowLines)
 			this.mindMap.rainbowLines.updateRainLinesConfig({open:false})
 			this.mindMap.emit('data_change')
 		}
@@ -1833,5 +2253,49 @@ export class SMMView extends TextFileView {
 			input.click();
 		});
 	}
+	setSameWidth(){
 
+		function buildLevelMap(node: { getChildrenLength: () => number; children: any[]; }, level = 0, levelMap = {}) {
+			// 确保当前层级的数组存在
+			// @ts-ignore
+			if (!levelMap[level]) {
+				// @ts-ignore
+				levelMap[level] = [];
+			}
+
+			// 将当前节点添加到对应层级的数组
+			// @ts-ignore
+			levelMap[level].push(node);
+
+			// 递归处理所有子节点
+			if (node.getChildrenLength() > 0) {
+				node.children.forEach(child => {
+					// eslint-disable-next-line @typescript-eslint/no-unused-vars
+					buildLevelMap(child, level + 1, levelMap);
+				});
+			}
+
+			return levelMap;
+		}
+		const levelMap = buildLevelMap(this.mindMap.renderer.root);
+		// @ts-ignore
+		for(const i in levelMap){
+			// @ts-ignore
+			if(i == 0){
+				continue
+			}
+			// @ts-ignore
+			const nodelist = levelMap[i]
+			// @ts-ignore
+			nodelist.sort((node1,node2)=>node1.width - node2.width)
+			for(const node of nodelist){
+				node.setData({
+					customTextWidth: nodelist[nodelist.length - 1].width - 31,
+				})
+				this.mindMap.render()
+				console.log(nodelist[nodelist.length - 1].width)
+				// this.mindMap.emit('dragModifyNodeWidthEnd', node)
+			}
+		}
+	}
 }

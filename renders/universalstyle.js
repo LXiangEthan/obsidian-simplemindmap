@@ -95,8 +95,6 @@ export const smm_ustyle = `
       <div class="smm-ustyle-field-checkbox">
         <input type="checkbox" class="smm-ustyle-checkbox" id="smm-if-arrow">
         <label class="smm-ustyle-label">是否显示箭头</label>
-        <input type="checkbox" class="smm-ustyle-checkbox" id="smm-if-fingerDraw">
-        <label class="smm-ustyle-label">是否开启手绘风格</label>
       </div>
       <div class="smm-ustyle-sub-section">
         <h4 class="smm-ustyle-section-title" style="font-size: 14px; margin-bottom: 5px;">彩虹线条</h4>
