@@ -306,7 +306,7 @@ If your plugin does not need CSS, delete this file.
 	top: 50px;
 	max-width: 600px;
 	margin: 0 auto;
-	background-color: rgb(255, 255, 255);
+	background-color: var(--background-primary);
 	padding: 16px 60px;
 }
 
@@ -325,7 +325,7 @@ If your plugin does not need CSS, delete this file.
 	padding: 12px 14px;
 	border: 1px solid #e2e8f0;
 	border-radius: 8px;
-	background-color: #ffffff;
+	background-color: var(--background-primary);
 	font-size: 14px;
 	line-height: 1.5;
 	color: #334155;
@@ -402,7 +402,7 @@ If your plugin does not need CSS, delete this file.
 	width: 80%;
 	max-width: 600px;
 	margin: 0 auto;
-	background-color: #ffffff;
+	background-color: var(--background-primary);
 	border-radius: 8px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 	padding: 30px 16px;
@@ -581,7 +581,7 @@ If your plugin does not need CSS, delete this file.
 	border-radius: 8px;
 	z-index:2;
 	animation: fadeIn 0.15s ease-out;
-	background-color: #ffffff;
+	background-color: var(--background-primary);
 	position: absolute;
 	top:50px;
 	width:80%;
@@ -904,7 +904,7 @@ If your plugin does not need CSS, delete this file.
 	padding: 18px;
 	max-width: 600px;
 	margin: 0 auto;
-	background-color: #ffffff;
+	background-color: var(--background-primary);
 	border-radius: 8px;
 	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 	overflow: hidden;
@@ -2221,7 +2221,7 @@ If your plugin does not need CSS, delete this file.
 	transition: background-color 0.15s ease;
 	gap: 0.75rem;
 	font-size: 0.9rem;
-	border-bottom: 1px solid var(--background-primary);;
+	border-bottom: 1px solid var(--background-primary);
 }
 
 .smm--right-menu-item:last-child {
@@ -2261,7 +2261,7 @@ If your plugin does not need CSS, delete this file.
 	position: absolute;
 	z-index: 999;
 	display: flex;
-	background-color: white;
+	background-color: var(--background-primary);
 	border-radius: 8px;
 	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 	transform: translateY(20px);
@@ -2276,7 +2276,7 @@ If your plugin does not need CSS, delete this file.
 	visibility: visible;
 }
 
-.smm-float-btn {
+.smm-float-btn{
 	appearance: none !important;
 	-webkit-appearance: none !important; /* Safari/Chrome */
 	-moz-appearance: none !important;    /* Firefox */
@@ -2296,7 +2296,6 @@ If your plugin does not need CSS, delete this file.
 	background-color: white;
 	color: #333;
 }
-
 .smm-float-btn:not(:last-child) {
 	border-right: 1px solid #e5e7eb;
 }
