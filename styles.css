@@ -16,6 +16,12 @@ If your plugin does not need CSS, delete this file.
 	--light-color: #000000;
 	--transition-duration: 0.3s;
 }
+.theme-light{
+	--dg-lighter-color: #f9f9f9;
+}
+.theme-dark{
+	--dg-lighter-color: #2e2e2e;
+}
 .view-content{
 	padding-bottom: 12px;
 }
@@ -201,7 +207,7 @@ If your plugin does not need CSS, delete this file.
 /* 按钮组容器 */
 .smm-toolbar {
 	border-radius: 8px;
-	border:1px solid #E2E8F0;
+	border:1px solid var(--dg-lighter-color);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -209,7 +215,7 @@ If your plugin does not need CSS, delete this file.
 	width:auto;
 	padding: 0;
 	border-bottom: 1px solid #e2e8f0;
-	background-color: #ffffff;
+	background-color: var(--background-primary);
 	margin-top:2px;
 }
 
@@ -999,11 +1005,11 @@ If your plugin does not need CSS, delete this file.
 
 #smm-SL{
 	border-radius: 8px;
-	border:1px solid #E2E8F0;
+	border:1px solid var(--dg-lighter-color);
 	position: absolute;
 	bottom: 10px;
 	left:10px;
-	background: rgb(255, 255, 255);
+	background-color: var(--background-primary);
 	height: 48px;
 	width:auto;
 	padding-left: 2px;
@@ -1022,14 +1028,14 @@ If your plugin does not need CSS, delete this file.
 #smm-panel-container{
 	max-width: 815px;
 	border-radius: 8px;
-	border:1px solid #E2E8F0;
+	border:1px solid var(--dg-lighter-color);
 	z-index:1;
 	position: absolute;
 	top: 75px;
 	right: 5px;
 	width: 405px;
 	height:85%;
-	background-color: #ffffff;
+	background-color: var(--background-primary);
 	display: flex;
 	justify-content: start;
 	animation: fadeIn 0.15s ease-out;
@@ -1040,7 +1046,7 @@ If your plugin does not need CSS, delete this file.
 	top: 0;
 	bottom: 0;
 	width: 3px;
-	background-color: #d1d1d1;
+	background-color: var(--dg-lighter-color);
 	cursor: ew-resize;
 }
 
@@ -1050,7 +1056,7 @@ If your plugin does not need CSS, delete this file.
 .smm-sidebar {
 	border-radius: 8px;
 	width: 64px;
-	background-color: #ffffff;
+	background-color: var(--background-primary);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -1122,7 +1128,7 @@ If your plugin does not need CSS, delete this file.
 /* 主题选择器容器 */
 .smm-themes-container {
 	width:100%;
-	background-color: #ffffff;
+	background-color: var(--background-primary);
 	border-radius: 8px;
 	transition: all 0.3s ease;
 }
@@ -1133,8 +1139,7 @@ If your plugin does not need CSS, delete this file.
 	border: 1px solid #e2e8f0;
 	border-radius: 4px;
 	appearance: none;
-	background-color: #ffffff;
-	color: #334155;
+	background-color: var(--background-primary);
 	cursor: pointer;
 	transition: all 0.2s ease;
 	position: absolute;
@@ -1154,8 +1159,7 @@ If your plugin does not need CSS, delete this file.
 	padding: 12px 16px;
 	font-size: 16px;
 	font-weight: 500;
-	color: #334155;
-	border-top: 1px solid #e2e8f0;
+	border-bottom: 1px solid #e2e8f0;
 }
 
 /* 主题网格 */
@@ -1197,19 +1201,18 @@ If your plugin does not need CSS, delete this file.
 
 /* 主题描述 */
 .smm-theme-info {
+	background-color: var(--background-primary);
 	padding: 12px;
 }
 
 .smm-theme-title {
 	font-size: 14px;
 	font-weight: 500;
-	color: #334155;
 	margin-bottom: 4px;
 }
 
 .smm-theme-desc {
 	font-size: 12px;
-	color: #64748b;
 }
 
 /* 激活状态 */
@@ -1238,13 +1241,11 @@ If your plugin does not need CSS, delete this file.
 
 /* 标题栏 */
 .smm-structure-header {
-	padding: 16px;
-	background-color: #f1f5f9;
+	padding: 12px 16px;
+	background-color: var(--background-primary);
 	border-bottom: 1px solid #e2e8f0;
-	font-size: 18px;
+	font-size: 16px;
 	font-weight: 500;
-	color: #334155;
-	text-align: center;
 }
 
 /* 结构图片网格 */
@@ -1287,18 +1288,17 @@ If your plugin does not need CSS, delete this file.
 /* 结构信息 */
 .smm-structure-info {
 	padding: 12px;
+	background-color: var(--background-primary);
 }
 
 .smm-structure-title {
 	font-size: 14px;
 	font-weight: 500;
-	color: #334155;
 	margin-bottom: 4px;
 }
 
 .smm-structure-desc {
 	font-size: 12px;
-	color: #64748b;
 }
 
 /* 激活状态 */
@@ -1314,7 +1314,7 @@ If your plugin does not need CSS, delete this file.
 	padding: 16px;
 	border-radius: 8px;
 	font-family: 'Inter', sans-serif;
-	background-color: #ffffff;
+	background-color: var(--background-primary);
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 	font-size: 14px;
 	transition: all 0.2s ease;
@@ -1340,7 +1340,6 @@ If your plugin does not need CSS, delete this file.
 	font-size: 16px;
 	font-weight: 600;
 	margin: 0 0 8px 0;
-	color: #2c3e50;
 	padding: 2px 0;
 	letter-spacing: -0.02em;
 }
@@ -1360,7 +1359,6 @@ If your plugin does not need CSS, delete this file.
 .smm-nodestyle-label {
 	font-size: 12px;
 	margin-bottom: 4px;
-	color: #7f8c8d;
 	font-weight: 500;
 	text-transform: uppercase;
 	letter-spacing: 0.02em;
@@ -1374,7 +1372,6 @@ If your plugin does not need CSS, delete this file.
 	border-radius: 4px;
 	font-size: 14px;
 	padding: 0 8px;
-	background-color: #f8fafc;
 	box-sizing: border-box;
 	transition: all 0.15s ease;
 }
@@ -1497,7 +1494,6 @@ If your plugin does not need CSS, delete this file.
 .smm-ustyle-section-title {
 	font-size: 16px;
 	font-weight: bold;
-	color: #333;
 	margin: 0 0 10px 0;
 }
 
@@ -1520,7 +1516,6 @@ If your plugin does not need CSS, delete this file.
 .smm-ustyle-label {
 	display: block;
 	font-size: 12px;
-	color: #666;
 	margin-bottom: 4px;
 }
 
@@ -1673,11 +1668,10 @@ If your plugin does not need CSS, delete this file.
 /* 头部 */
 .smm-image-upload-header {
 	padding: 12px 16px;
-	background-color: #f1f5f9;
+	background-color: var(--background-primary);
 	border-bottom: 1px solid #e2e8f0;
 	font-size: 16px;
 	font-weight: 500;
-	color: #334155;
 }
 
 /* 上传区域 */
@@ -1873,12 +1867,11 @@ If your plugin does not need CSS, delete this file.
 
 /* 自定义类 */
 .smm-imgtag-container {
-	background-color: white;
+	background-color: var(--background-primary);
 	border-radius: 8px;
 	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 	max-width: 800px;
 	width: 100%;
-	padding: 24px;
 	transition: all 0.3s ease;
 }
 
@@ -1891,16 +1884,15 @@ If your plugin does not need CSS, delete this file.
 }
 
 .smm-imgtag-category-title {
-	font-size: 18px;
+	padding: 12px 16px;
+	font-size: 16px;
 	font-weight: 500;
-	color: #1f2937;
-	margin-bottom: 12px;
-	padding-bottom: 8px;
 	border-bottom: 1px solid #e5e7eb;
 }
 
 .smm-imgtag-grid {
 	display: grid;
+	padding:24px 16px;
 	grid-template-columns: repeat(auto-fill, minmax(10px, 1fr));
 	gap: 16px;
 }
@@ -1928,7 +1920,6 @@ If your plugin does not need CSS, delete this file.
 
 .smm-imgtag-icon-name {
 	font-size: 12px;
-	color: #4b5563;
 	text-align: center;
 }
 
@@ -1940,7 +1931,7 @@ If your plugin does not need CSS, delete this file.
 	position: absolute;
 	top:50px;
 	right: 0;
-	background-color: white;
+	background-color: var(--background-primary);
 	border-radius: 8px;
 	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 	list-style: none;
@@ -1964,14 +1955,12 @@ If your plugin does not need CSS, delete this file.
 	padding: 8px 16px;
 	cursor: pointer;
 	transition: all 0.2s ease;
-	color: #374151;
 	font-size: 14px;
 	position: relative;
 }
 
 .smm-list-item:hover {
-	background-color: #f3f4f6;
-	color: #1e40af;
+	background-color: var(--dg-lighter-color);
 }
 
 .smm-list-item-icon {
@@ -1979,16 +1968,16 @@ If your plugin does not need CSS, delete this file.
 	height: 18px;
 	margin-right: 10px;
 	flex-shrink: 0;
-	color: #6b7280;
+	color: #93a8ed;
 }
 
 .smm-list-item:hover .smm-list-item-icon {
-	color: #1e40af;
+	color: #93a8ed;
 }
 
 .smm-list-divider {
 	height: 1px;
-	background-color: #e5e7eb;
+	background-color: var(--background-primary);
 	margin: 6px 0;
 }
 
@@ -2023,7 +2012,7 @@ If your plugin does not need CSS, delete this file.
 
 .smm-dg-outline-container {
 	max-width: 800px;
-	background: #fff;
+	background-color: var(--background-primary);
 	box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 	border-radius: 6px;
 	padding: 20px;
@@ -2040,14 +2029,14 @@ If your plugin does not need CSS, delete this file.
 	transition: background 0.2s;
 }
 .smm-dg-outline-node:hover {
-	background: #f9f9f9;
+	background: var(--dg-lighter-color);
 }
 .smm-dg-outline-node.smm-dg-dragging {
 	opacity: 0.5;
-	background: #e6f7ff;
+	background: var(--dg-lighter-color);
 }
 .smm-dg-outline-node.smm-dg-drop-target {
-	background: #f0f9ff;
+	background-color: var(--background-primary);
 	box-shadow: 0 0 0 1px #1890ff;
 }
 .smm-dg-drop-indicator {
@@ -2131,7 +2120,6 @@ If your plugin does not need CSS, delete this file.
 	align-items: center;
 	justify-content: center;
 	font-size: 14px;
-	color: #555;
 }
 .smm-dg-node-btn:hover {
 	background: #e0e0e0;
@@ -2187,7 +2175,7 @@ If your plugin does not need CSS, delete this file.
 	position: absolute;
 	z-index: 10000;
 	width: 200px;
-	background: white;
+	background-color: var(--background-primary);
 	border-radius: 0.5rem;
 	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 	opacity: 0;
@@ -2209,7 +2197,7 @@ If your plugin does not need CSS, delete this file.
 	max-height: 300px;
 	overflow: scroll;
 	width: 200px;
-	background: white;
+	background-color: var(--background-primary);
 	border-radius: 0.5rem;
 	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 	opacity: 0;
@@ -2229,12 +2217,11 @@ If your plugin does not need CSS, delete this file.
 	padding: 0.75rem 1rem;
 	display: flex;
 	align-items: center;
-	color: #334155;
 	cursor: pointer;
 	transition: background-color 0.15s ease;
 	gap: 0.75rem;
 	font-size: 0.9rem;
-	border-bottom: 1px solid #f1f5f9;
+	border-bottom: 1px solid var(--background-primary);;
 }
 
 .smm--right-menu-item:last-child {
@@ -2242,7 +2229,7 @@ If your plugin does not need CSS, delete this file.
 }
 
 .smm--right-menu-item:hover {
-	background-color: #f1f5f9;
+	background-color: var(--dg-lighter-color);
 }
 
 .smm--right-menu-item i {
@@ -2300,7 +2287,7 @@ If your plugin does not need CSS, delete this file.
 	align-items: center;
 	justify-content: center;
 	gap: 6px;
-	padding: 12px 16px;
+	/*padding: 12px 16px;*/
 	border: none;
 	cursor: pointer;
 	font-size: 14px;
