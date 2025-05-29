@@ -2,7 +2,7 @@ import {Plugin, TFile, WorkspaceLeaf} from 'obsidian';
 import { SMMView, VIEW_TYPE_SMM } from "./view"
 // @ts-ignore
 import moment = require("moment");
-// 
+//
 // @ts-ignore
 import Export from 'simple-mind-map/src/plugins/Export.js'
 import MindMap from "simple-mind-map";
