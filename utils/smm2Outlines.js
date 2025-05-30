@@ -214,7 +214,7 @@ export const smm2outlines = (mindMap,data,contentEl,document)=>{
 				new Notice('祖先节点不能推给孩子节点')
 				return
 			}
-
+			if (!targetNode || targetNode.uid === node.uid) return;
 			if(dropPosition == 'inside') {
 				mindMap.execCommand('MOVE_NODE_TO', node, targetNode)
 			}

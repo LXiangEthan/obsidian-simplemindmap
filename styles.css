@@ -494,7 +494,7 @@ If your plugin does not need CSS, delete this file.
 	margin-top: 8px;
 	border: 1px solid #e2e8f0;
 	border-radius: 4px;
-	background-color: #ffffff;
+	background-color: var(--background-primary);
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
@@ -513,17 +513,17 @@ If your plugin does not need CSS, delete this file.
 }
 
 .smm-search-item:hover {
-	background-color: #f8fafc;
+	background-color: var(--dg-lighter-color);
 }
 
 .smm-search-item-icon {
 	margin-right: 10px;
-	color: #0284c7;
+	/*color: #0284c7;*/
 }
 
 .smm-search-item-title {
 	font-size: 14px;
-	color: #334155;
+	/*color: #334155;*/
 	flex: 1;
 	white-space: nowrap;
 	overflow: hidden;
@@ -532,7 +532,7 @@ If your plugin does not need CSS, delete this file.
 
 .smm-search-item-path {
 	font-size: 12px;
-	color: #64748b;
+	/*color: #64748b;*/
 }
 
 /* 按钮组 */
@@ -2362,7 +2362,6 @@ If your plugin does not need CSS, delete this file.
 .smm-float-dropdown-item {
 	z-index: 99999;
 	padding: 10px 16px;
-	color: #333;
 	text-decoration: none;
 	display: block;
 	font-size: 14px;
@@ -2370,7 +2369,7 @@ If your plugin does not need CSS, delete this file.
 }
 
 .smm-float-dropdown-item:hover {
-	background-color: #f3f4f6;
+	background-color: var(--dg-lighter-color)
 }
 
 /* 颜色选择器样式 */
