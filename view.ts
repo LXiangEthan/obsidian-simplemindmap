@@ -249,7 +249,6 @@ export class SMMView extends TextFileView {
 				iconList: this.customIcons
 			})
 			setTimeout(async () => {
-				this.mindMap.file = this.currentFile
 				// @ts-ignore
 				this.addEventWithButton()
 				this.outLinkrefresh()
@@ -274,7 +273,6 @@ export class SMMView extends TextFileView {
 						iconList: this.customIcons
 					})
 					setTimeout(async () => {
-						this.mindMap.file = this.currentFile
 						// @ts-ignore
 						this.addEventWithButton()
 						this.outLinkrefresh()
@@ -1733,7 +1731,6 @@ export class SMMView extends TextFileView {
 				}
 				customeIcon.push(icons)
 			}
-			console.log(customeIcon)
 			return customeIcon
 		}catch{
 			console.log('未安装iconize插件')

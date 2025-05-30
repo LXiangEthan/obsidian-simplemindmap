@@ -327,7 +327,7 @@ export default class ExamplePlugin extends Plugin {
 
 
 		function observeCanvasNodes() {
-			const canvasRoot = document.querySelector('.canvas-wrapper');
+			// const canvasRoot = document.querySelector('.canvas-wrapper');
 			const canvasMutationObserver = new MutationObserver((mutations) => {
 				for (const mutation of mutations) {
 					// @ts-ignore
@@ -341,14 +341,14 @@ export default class ExamplePlugin extends Plugin {
 
 			// 开始监听 Canvas 容器
 			// @ts-ignore
-			canvasMutationObserver.observe(canvasRoot, {
+			canvasMutationObserver.observe(document.body, {
 				childList: true,
 				subtree: true
 			});
 			// 初始化处理已存在的嵌入元素
 			document.querySelectorAll('.canvas-node-content').forEach(processObsidianEmbed);
 		}
-
+		observeCanvasNodes()
 		const dataURItoBlob = this.dataURItoBlob
 			async function renderSmmInCanvas(el: HTMLElement) {
 
@@ -373,12 +373,25 @@ export default class ExamplePlugin extends Plugin {
 						if(!svgData){
 							setTimeout(()=>{
 								svgData = JSON.parse(content).svgData
+								if(!svgData){
+									setTimeout(()=>{
+										svgData = JSON.parse(content).svgData
+										const bloburl = URL.createObjectURL(dataURItoBlob(svgData))
+										node.classList.remove('file-embed')
+										node.classList.add('media-embed')
+										node.classList.add('image-embed')
+										// @ts-ignore
+										node.innerHTML = `<img src="${bloburl}" width="100%" height="100%" draggable="false" style="position: absolute;z-index=100"></img>`
+										return
+									},1000)
+								}
 								const bloburl = URL.createObjectURL(dataURItoBlob(svgData))
 								node.classList.remove('file-embed')
 								node.classList.add('media-embed')
 								node.classList.add('image-embed')
 								// @ts-ignore
 								node.innerHTML = `<img src="${bloburl}" width="100%" height="100%" draggable="false" style="position: absolute;z-index=100"></img>`
+								return
 							},500)
 						}
 						const bloburl = URL.createObjectURL(dataURItoBlob(svgData))
@@ -389,11 +402,25 @@ export default class ExamplePlugin extends Plugin {
 					}
 			}
 		}
-		this.app.workspace.on('file-open',(file)=>{
-			if(file?.extension == 'canvas'){
-				observeCanvasNodes()
-			}
-		})
+		// this.registerEvent(this.app.workspace.on('file-open',(file)=>{
+		// 	// @ts-ignore
+		// 	if(file.extension == 'canvas'){
+		// 		console.log('文件打开')
+		// 		observeCanvasNodes()
+		// 	}
+		// }))
+		// this.registerEvent(this.app.workspace.on('active-leaf-change',()=>{
+		// 	// @ts-ignore
+		// 	if(this.app.workspace.getActiveFile()?.extension == 'canvas'){
+		// 		observeCanvasNodes()
+		// 	}
+		// }))
+		// this.registerEvent(this.app.workspace.on('layout-change',()=>{
+		// 	// @ts-ignore
+		// 	if(this.app.workspace.getActiveFile()?.extension == 'canvas'){
+		// 		observeCanvasNodes()
+		// 	}
+		// }))
 
 			// ===== 卸载函数 =====
 			return {

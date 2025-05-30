@@ -2340,7 +2340,7 @@ If your plugin does not need CSS, delete this file.
 	position: absolute;
 	right: 0;
 	/*bottom: calc(100% + 8px);*/
-	background-color: white;
+	background-color: var(--background-primary);
 	border-radius: 8px;
 	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 	min-width: 180px;
