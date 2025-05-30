@@ -117,6 +117,7 @@ export class SMMView extends TextFileView {
 	private saveTimer: number;
 	private refuse = false;
 	private file_lock = false;
+	private customIcons :any
 	clear() {
 		this.data = '';
 		if (this.mindMap) {
@@ -146,6 +147,9 @@ export class SMMView extends TextFileView {
 		this.registerEvent(this.app.workspace.on('layout-change',()=>{
 			this.file_lock = false
 		}))
+		this.registerEvent(this.app.workspace.on('window-open',()=>{
+			this.mindMap.reRender()
+		}))
 
 	}
 
@@ -164,9 +168,9 @@ export class SMMView extends TextFileView {
 		return this.data;
 	}
 
-	setViewData(data: string) {
+	async setViewData(data: string) {
 		this.contentEl.style.overflow = 'hidden'
-		if(this.file_lock){
+		if (this.file_lock) {
 			return false
 		}
 		if (this.mindMap) {
@@ -175,15 +179,15 @@ export class SMMView extends TextFileView {
 		}
 		this.data = data
 		this.contentEl.empty()
-		this.contentEl.setAttribute('width','100%')
-		this.contentEl.setAttribute('height','100%')
+		this.contentEl.setAttribute('width', '100%')
+		this.contentEl.setAttribute('height', '100%')
 		// @ts-ignore
 		let loadingImg = null
 		// @ts-ignore
-		if(this.app.settings.cartoon){
+		if (this.app.settings.cartoon) {
 			loadingImg = document.createElement('img')
 			loadingImg.classList.add('smm-loading');
-			loadingImg.src=loading_gif
+			loadingImg.src = loading_gif
 		}
 		this.data = data;
 		this.contentEl.createEl('div', {attr: {class: 'smm-window-leaf'}, text: ''});
@@ -193,7 +197,7 @@ export class SMMView extends TextFileView {
 		// @ts-ignore
 		roots.setAttribute('height', '100%');
 		// @ts-ignore
-		if(this.app.settings.cartoon){
+		if (this.app.settings.cartoon) {
 			// @ts-ignore
 			roots.appendChild(loadingImg)
 		}
@@ -229,33 +233,36 @@ export class SMMView extends TextFileView {
 		// @ts-ignore
 		const newData = JSON.parse(data)
 		// @ts-ignore
+		this.customIcons = await this.getIconize()
+		// @ts-ignore
 		const {root, layout, theme, view} = newData
 
-			try {
+		try {
+			// @ts-ignore
+			this.mindMap = new MindMap({
+				el: this.contentEl.querySelector(".ob-simple-mindMapContainer"),
+				data: root,
+				layout: layout,
+				theme: theme.template,
+				themeConfig: theme.config,
+				viewData: view,
+				iconList: this.customIcons
+			})
+			setTimeout(async () => {
+				this.mindMap.file = this.currentFile
 				// @ts-ignore
-				this.mindMap = new MindMap({
-					el: this.contentEl.querySelector(".ob-simple-mindMapContainer"),
-					data: root,
-					layout: layout,
-					theme: theme.template,
-					themeConfig: theme.config,
-					viewData: view,
-				})
-				setTimeout(async () => {
-					this.mindMap.file = this.currentFile
+				this.addEventWithButton()
+				this.outLinkrefresh()
+				// @ts-ignore
+				if (this.app.settings.cartoon) {
 					// @ts-ignore
-					this.addEventWithButton()
-					this.outLinkrefresh()
-					// @ts-ignore
-					if (this.app.settings.cartoon) {
-						// @ts-ignore
-						loadingImg.remove()
-					}
-					await this.saveDataIntoFile()
-				}, 500)
-			} catch(e){
-				setTimeout(() => {
-					try {
+					loadingImg.remove()
+				}
+				await this.saveDataIntoFile()
+			}, 500)
+		} catch (e) {
+			setTimeout(() => {
+				try {
 					// @ts-ignore
 					this.mindMap = new MindMap({
 						el: this.contentEl.querySelector(".ob-simple-mindMapContainer"),
@@ -264,24 +271,25 @@ export class SMMView extends TextFileView {
 						theme: theme.template,
 						themeConfig: theme.config,
 						viewData: view,
+						iconList: this.customIcons
 					})
-						setTimeout(async () => {
-							this.mindMap.file = this.currentFile
+					setTimeout(async () => {
+						this.mindMap.file = this.currentFile
+						// @ts-ignore
+						this.addEventWithButton()
+						this.outLinkrefresh()
+						// @ts-ignore
+						if (this.app.settings.cartoon) {
 							// @ts-ignore
-							this.addEventWithButton()
-							this.outLinkrefresh()
-							// @ts-ignore
-							if (this.app.settings.cartoon) {
-								// @ts-ignore
-								loadingImg.remove()
-							}
-							await this.saveDataIntoFile()
-						}, 500)
-					}catch{
-						return
-					}
-				}, 1000)
-			}
+							loadingImg.remove()
+						}
+						await this.saveDataIntoFile()
+					}, 500)
+				} catch {
+					return
+				}
+			}, 1000)
+		}
 	}
 	async simpleSaveSvg(){
 		await lock.acquire('resource', async () => {
@@ -1679,16 +1687,69 @@ export class SMMView extends TextFileView {
 				dataurlField.value = ""
 			}
 	}
+	async getIconize() {
+		const customeIcon = []
+		const iconPath = `.obsidian/icons`
+		const removeWidthAndHeight = (svgString: string): string => {
+			const widthRe = new RegExp(/width="[\d.]+(px)?"/);
+			const heightRe = new RegExp(/height="[\d.]+(px)?"/);
+			// 替换 width 属性
+			if (svgString.match(widthRe)) {
+				svgString = svgString.replace(widthRe, '');
+			}
+			// 替换 height 属性
+			if (svgString.match(heightRe)) {
+				svgString = svgString.replace(heightRe, '');
+			}
+			// 移除 XML 声明和 DOCTYPE 部分
+			svgString = svgString.replace(/<\?xml[^>]*\?>/, '');
+			svgString = svgString.replace(/<!DOCTYPE[^>]*>/, '');
 
-	renderIcons() {
+			// 移除不必要的空格和换行符
+			svgString = svgString.replace(/(\r\n|\n|\r)/gm, '');
+			svgString = svgString.replace(/>\s+</gm, '><');
+			return svgString;
+		};
+		try {
+			const directoryContent = await this.app.vault.adapter.list(iconPath);
+			for (const path of directoryContent.folders) {
+				const svgfiles = await this.app.vault.adapter.list(path);
+				const icons = {
+					name: path.split('/')[path.split('/').length - 1].split('.')[0],
+					type: path.split('/')[path.split('/').length - 1].split('.')[0],
+					list: [
+
+					]
+				}
+				let count = 1
+				for(const svg of svgfiles.files){
+					const svgDom = await this.app.vault.adapter.read(svg);
+					const modifySvgDom = removeWidthAndHeight(svgDom)
+					icons.list.push(
+						// @ts-ignore
+						{name:String(count),icon:`${modifySvgDom}`}
+					)
+					count++
+				}
+				customeIcon.push(icons)
+			}
+			console.log(customeIcon)
+			return customeIcon
+		}catch{
+			console.log('未安装iconize插件')
+			return []
+		}
+	}
+	async renderIcons() {
 		const container = this.contentEl.querySelector('#iconsContainer');
-
 		// 清空容器
 		// @ts-ignore
 		container.innerHTML = '';
 
+		// @ts-ignore
+		const newIcons = nodeIconList.concat(this.customIcons)
 		// 遍历图标数据中的每个类别
-		for (const category of nodeIconList){
+		for (const category of newIcons){
 			// 创建类别容器
 			const categoryContainer = document.createElement('div');
 			categoryContainer.className = 'smm-imgtag-category';

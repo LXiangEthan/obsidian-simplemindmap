@@ -1051,7 +1051,7 @@ If your plugin does not need CSS, delete this file.
 }
 
 .smm-resize-handle:hover {
-	background-color: #165DFF;
+	background-color: #93b3fd;
 }
 .smm-sidebar {
 	border-radius: 8px;
