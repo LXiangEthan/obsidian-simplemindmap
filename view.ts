@@ -144,11 +144,8 @@ export class SMMView extends TextFileView {
 		this.registerEvent(this.app.workspace.on('file-open',()=>{
 			this.file_lock = false
 		}))
-		this.registerEvent(this.app.workspace.on('layout-change',()=>{
-			this.file_lock = false
-		}))
-		this.registerEvent(this.app.workspace.on('window-open',()=>{
-			this.mindMap.reRender()
+		this.registerEvent(this.app.vault.on('modify',()=>{
+			this.file_lock = true
 		}))
 
 	}
@@ -1161,7 +1158,7 @@ export class SMMView extends TextFileView {
 			}
 		}
 		// @ts-ignore
-		this.contentEl.querySelector('#smm-word-color').addEventListener('change',()=>{
+		this.contentEl.querySelector('#smm-word-color').addEventListener('input',()=>{
 			// @ts-ignore
 			this.mindMap.richText.formatText({
 				// @ts-ignore
@@ -1169,7 +1166,7 @@ export class SMMView extends TextFileView {
 			})
 		})
 		// @ts-ignore
-		this.contentEl.querySelector('#smm-float-bg-color').addEventListener('change',()=>{
+		this.contentEl.querySelector('#smm-float-bg-color').addEventListener('input',()=>{
 			// @ts-ignore
 			this.mindMap.richText.formatText({
 				// @ts-ignore

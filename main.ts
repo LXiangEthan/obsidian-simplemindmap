@@ -46,7 +46,7 @@ export default class ExamplePlugin extends Plugin {
 					} else {
 						// 创建新文件
 						await vault.create(fileName, fileContent);
-						await this.app.workspace.openLinkText(fileName, '', true);
+						await this.app.workspace.openLinkText(fileName, '', false);
 					}
 				} catch (error) {
 					new Notice('创建SMM文件失败' + error, 3000);
@@ -71,7 +71,7 @@ export default class ExamplePlugin extends Plugin {
 				} else {
 					// 创建新文件
 					await vault.create(fileName, fileContent);
-					await this.app.workspace.openLinkText(fileName, '', true);
+					await this.app.workspace.openLinkText(fileName, '', false);
 				}
 			} catch (error) {
 				new Notice('创建SMM文件失败' + error, 3000);
@@ -107,6 +107,7 @@ export default class ExamplePlugin extends Plugin {
 		}
 		this.checkForUpdates(true);
 		// ----------------------------------------------------------------------------
+		console.log(this.app.metadataCache)
 	}
 
 
@@ -346,7 +347,7 @@ export default class ExamplePlugin extends Plugin {
 				subtree: true
 			});
 			// 初始化处理已存在的嵌入元素
-			document.querySelectorAll('.canvas-node-content').forEach(processObsidianEmbed);
+			document.querySelectorAll('.canvas-node-content').forEach(renderSmmInCanvas);
 		}
 		observeCanvasNodes()
 		const dataURItoBlob = this.dataURItoBlob
