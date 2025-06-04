@@ -2,6 +2,9 @@
 
 This is a plugin to merge obsidian and mind-map frame,[the mind-map link](https://github.com/wanglin2/mind-map),it is based on the frame
 
+# linkmind
+Ob-SMM的markdown版本 [linkMind](https://github.com/LXiangEthan/LinkMind) 支持出入链，支持ob搜索，不再依赖于嵌入链接存储目录，可以在任意位置创建
+
 ## Function
 
 This function of this plugin is simple , make the mindmap ,use innerLink fluently , and never hurt the other folder and grammar of obsidian
